@@ -14,14 +14,14 @@ def f(t,a1,a2,tau1,tau2,c):
 
 
 #Load model
-model1a1b = myokit.load_model('sale2009-1a1b.mmt')
+model1a1b = myokit.load_model('.\Models\sale2008-1a1b.mmt')
 model1a1b.set_value('environment.Ko',5.4)
 model1a1b.set_value('environment.Ki',150)
 model1a1b.set_value('environment.T',273 + 35)
 
 #%% Figure 6A
 #Load protocol excel file
-log = myokit.DataLog.load_csv('riosPerez6ACurrents.csv')
+log = myokit.DataLog.load_csv(r'.\Protocols\Rios-Perez 2021\riosPerez6ACurrents.csv')
 
 print(log.keys())
 
@@ -98,7 +98,7 @@ plt.show()
 
 #%% Figure 6B
 #Load protocol excel file
-log = myokit.DataLog.load_csv('riosPerez6BSteady.csv')
+log = myokit.DataLog.load_csv(r'.\Protocols\Rios-Perez 2021\riosPerez6BSteady.csv')
 
 print(log.keys())
 
@@ -152,7 +152,7 @@ plt.show()
 
 #%% Figure 6C
 #Load protocol excel file
-log = myokit.DataLog.load_csv('riosPerez6CTail.csv')
+log = myokit.DataLog.load_csv(r'.\Protocols\Rios-Perez 2021\riosPerez6CTail.csv')
 
 print(log.keys())
 

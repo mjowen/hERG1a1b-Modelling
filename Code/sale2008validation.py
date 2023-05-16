@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 import myokit
 import numpy as np
 
-model1a1b = myokit.load_model('sale2009-1a1b.mmt')
-model1a = myokit.load_model('sale2009-1a.mmt')
+model1a1b = myokit.load_model('.\Models\sale2008-1a1b.mmt')
+model1a = myokit.load_model('.\Models\sale2008-1a.mmt')
 
-log = myokit.DataLog.load_csv('AP Protocol.csv')
+log = myokit.DataLog.load_csv('.\Protocols\Sale 2008\AP Protocol.csv')
 
 print(log.keys())
 

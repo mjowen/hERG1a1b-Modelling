@@ -7,4 +7,4 @@ import numpy as np
 import scipy
 
 #Load model
-model = myokit.load_model('hERG1a1bIndependence.mmt')
+model = myokit.load_model('.\Models\hERG1a1bIndependence.mmt')
