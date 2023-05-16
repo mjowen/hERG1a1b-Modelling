@@ -1,0 +1,91 @@
+[[model]]
+name: Sale 2008 1a1b
+desc: The hERG 1a/1b model
+#Initial values
+states.c3 = 1
+states.c2 = 0
+states.c1 = 0
+states.o = 0
+states.i = 0
+states.cb3 = 0
+states.cb2 = 0
+states.cb1 = 0
+states.b = 0
+states.ib = 0
+
+
+[environment]
+use stimulus.IStim as V
+use states.o as o
+R = 8315 [J/kmol/K]
+T = 273 + 34 [K]
+F = 96485 [C/mol]
+VFRT = V*F/(R*T)
+t = 0 bind time
+    in [ms]
+Ko = 4 [mmol]
+Ki = 140 [mmol]
+Ek = R*T/F*log(Ko/Ki) #Ek in mV due to kmol used in R
+Iherg = gherg*sqrt(Ko/5.4)*o*(V-Ek)
+gherg = 0.0048 [mS]
+    in [mS]
+e4031 = 55e-9 [mol]
+
+[stimulus]
+amplitude = 1 [uA/cm^2]
+IStim = pace * amplitude
+pace = 0 bind pace
+
+[states]
+use environment.e4031 as e4031
+use environment.VFRT as VFRT
+#Transition rates
+
+alpha = 0.03552*exp(1.812*VFRT)
+beta = 1.807e-3*exp(-1.913*VFRT)
+alpha1 = 4.340
+beta1 = 0.5409
+alpha2 = 0.02620*exp(1.241*VFRT)
+beta2 = 3.3e-3*exp(-0.9571*VFRT)
+alphai = 0.1139*exp(-0.4898*VFRT)*4.5/environment.Ko
+betai = 0.1254*exp(0.3781*VFRT)*(4.5/environment.Ko)^3
+mu = alphai*beta2/betai
+on = e4031*2e3
+off = 5e-6
+
+#Derivatives
+dot(c3) = c2*beta - c3*alpha
+dot(c2) = c3*alpha + c1*beta1 - c2*(beta+alpha1)
+dot(c1) = c2*alpha1 + o*beta2 + i*mu - c1*(beta1 + 2*alpha2)
+dot(o) = c1*alpha2 + i*alphai + b*off - o*(beta2 + betai + on)
+dot(i) = c1*alpha2 + o*betai - i*(mu + alphai)
+dot(cb3) = cb2*beta - cb3*alpha
+dot(cb2) = cb3*alpha + cb1*beta1 - cb2*(beta+alpha1)
+dot(cb1) = cb2*alpha1 + b*beta2 + ib*mu - cb1*(beta1+2*alpha2)
+dot(b) = cb1*alpha2 + ib*alphai + o*on - b*(beta2 + betai + off)
+dot(ib) = cb1*alpha2 + b*betai - ib*(mu + alphai)
+
+[[protocol]]
+# Level  Start    Length   Period   Multiplier
+60      100.0    4000      20000.0   0
+-105    4100     8000      20000.0   0
+
+[[script]]
+import matplotlib.pyplot as plt
+import myokit
+
+# Get model and protocol, create simulation
+m = get_model()
+p = get_protocol()
+s = myokit.Simulation(m, p)
+
+# Run simulation
+d = s.run(1000)
+
+# Display the results
+var = next(m.states()).qname()
+plt.figure()
+plt.plot(d.time(), d[var])
+plt.title(var)
+plt.show()
+

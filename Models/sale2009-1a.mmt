@@ -1,0 +1,131 @@
+[[model]]
+name: Sale 2008 1a
+desc: The hERG 1a model
+#Initial values
+states.c3 = 0.285714286
+states.c2 = 0
+states.c1 = 0
+states.o = 0
+states.i = 0
+states.cb3 = 0
+states.cb2 = 0
+states.cb1 = 0
+states.b = 0
+states.ib = 0
+
+states.cn3 = 0.714285714
+states.cn2 = 0
+states.cn1 = 0
+states.on = 0
+states.ni = 0
+states.cnb3 = 0
+states.cnb2 = 0
+states.cnb1 = 0
+states.nb = 0
+states.nib = 0
+
+
+[environment]
+use stimulus.IStim as V
+use states.o as o
+use states.on as on
+R = 8315 [J/kmol/K]
+T = 273 + 34 [K]
+F = 96485 [C/mol]
+VFRT = V*F/(R*T)
+t = 0 bind time
+    in [ms]
+Ko = 4
+Ki = 140
+Ek = R*T/F*log(Ko/Ki)
+Iherg = gherg*sqrt(Ko/5.4)*(o+on)*(V-Ek)
+gherg = 0.0048 [mS]
+    in [mS]
+e4031 = 55e-9
+
+[stimulus]
+amplitude = 1 [uA/cm^2]
+IStim = pace * amplitude
+pace = 0 bind pace
+
+[states]
+use environment.e4031 as e4031
+use environment.VFRT as VFRT
+#Transition rates
+
+alpha = 0.03552*exp(1.812*VFRT)
+beta = 1.807e-3*exp(-1.913*VFRT)
+alpha1 = 4.340
+beta1 = 0.5409
+alpha2 = 0.02620*exp(1.241*VFRT)
+beta2 = 3.3e-3*exp(-0.9571*VFRT)
+alphai = 0.1139*exp(-0.4898*VFRT)*4.5/environment.Ko
+betai = 0.1254*exp(0.3781*VFRT)*(4.5/environment.Ko)^3
+mu = alphai*beta2/betai
+
+alphan = 0.35*alpha
+betan = 0.35*beta
+alphan1 = 0.35*alpha1
+betan1 = 0.35*betan
+alphan2 = 0.35*alpha2
+betan2 = 0.35*beta2
+alphani = 0.4*alphai
+betani = 1.2*betai
+mun = alphani*betan2/betani
+
+ON = e4031*2e3
+OFF = 5e-6
+
+theta = 5
+rho = 2
+kappa = ON*theta
+lambda = ON*rho
+delta = OFF*theta
+nu = OFF*rho
+
+#Derivatives
+dot(c3) = c2*beta - c3*alpha
+dot(c2) = c3*alpha + c1*beta1 - c2*(beta+alpha1)
+dot(c1) = c2*alpha1 + o*beta2 + i*mu - c1*(beta1 + 2*alpha2)
+dot(o) = c1*alpha2 + i*alphai + on*rho + b*OFF + nb*nu - o*(beta2 + betai + theta + ON + kappa)
+dot(i) = c1*alpha2 + o*betai - i*(mu + alphai)
+dot(cn3) = cn2*betan - cn3*alphan
+dot(cn2) = cn3*alphan + cn1*betan1 - cn2*(betan+alphan1)
+dot(cn1) = cn2*alphan1 + on*betan2 + ni*mun - cn1*(betan1 + 2*alphan2)
+dot(on) = cn1*alphan2 + ni*alphani + o*theta + b*delta + nb*OFF - on*(betan2 + betani + rho + lambda + ON)
+dot(ni) = cn1*alphan2 + on*betani - ni*(mun + alphani)
+dot(cb3) = cb2*beta - cb3*alpha
+dot(cb2) = cb3*alpha + cb1*beta1 - cb2*(beta+alpha1)
+dot(cb1) = cb2*alpha1 + b*beta2 + ib*mu - cb1*(beta1+2*alpha2)
+dot(b) = cb1*alpha2 + ib*alphai + o*ON + on*lambda + nb*rho - b*(beta2 + betai + OFF + delta + theta)
+dot(ib) = cb1*alpha2 + b*betai - ib*(mu + alphai)
+dot(cnb3) = cnb2*betan - cnb3*alphan
+dot(cnb2) = cnb3*alphan + cnb1*betan1 - cnb2*(betan+alphan1)
+dot(cnb1) = cnb2*alphan1 + nb*betan2 + nib*mun - cnb1*(betan1+2*alphan2)
+dot(nb) = cnb1*alphan2 + nib*alphani + o*kappa + on*ON + b*theta - nb*(betan2 + betani + nu + OFF + rho)
+dot(nib) = cnb1*alphan2 + nb*betani - nib*(mun + alphani)
+
+[[protocol]]
+# Level  Start    Length   Period   Multiplier
+60      100.0    4000      20000.0   0
+-105    4100     8000      20000.0   0
+
+[[script]]
+import matplotlib.pyplot as plt
+import myokit
+
+# Get model and protocol, create simulation
+m = get_model()
+p = get_protocol()
+s = myokit.Simulation(m, p)
+
+# Run simulation
+d = s.run(1000)
+
+# Display the results
+var = next(m.states()).qname()
+plt.figure()
+plt.plot(d.time(), d[var])
+plt.title(var)
+plt.show()
+
