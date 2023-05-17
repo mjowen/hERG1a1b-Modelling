@@ -1,0 +1,167 @@
+[[model]]
+author: Myokit CellML 1 API
+documentation: """
+    Contributions of HERG K+ current to repolarization of the human ventricular
+    action potential
+    
+    Catherine
+    Lloyd
+    
+    Bioengineering Institute, University of Auckland
+    
+    Model Status
+    
+    This model is known to run in OpenCell and COR to reproduce the published
+    results. Units have been checked. COR reports they are balanced and
+    consistent while OpenCell is reporting some inconsistencies. OpenCell is
+    currently having unit "issues" and we believe the units are correct in this
+    CellML model.
+    
+    Model Structure
+    
+    ABSTRACT: Action potential repolarization in the mammalian heart is
+    governed by interactions of a number of time- and voltage-dependent
+    channel-mediated currents, as well as contributions from the Na+/Ca2+
+    exchanger and the Na+/K+ pump. Recent work has shown that one of the K+
+    currents (HERG) which contributes to repolarization in mammalian ventricle
+    is a locus at which a number of point mutations can have significant
+    functional consequences. In addition, the remarkable sensitivity of this K+
+    channel isoform to inhibition by a variety of pharmacological agents and
+    clinical drugs has resulted in HERG being a major focus for Safety
+    Pharmacology requirements. For these reasons we and others have attempted
+    to define the functional role for HERG-mediated K+ currents in
+    repolarization of the action potential in the human ventricle. Here, we
+    describe and evaluate changes in the formulations for two K+ currents, IK1
+    and HERG (or IK,r), within the framework of ten Tusscher model of the human
+    ventricular action potential. In this computational study, new mathematical
+    formulations for the two nonlinear K+ conductances, IK1 and HERG, have been
+    developed based upon experimental data obtained from electrophysiological
+    studies of excised human ventricular tissue and/or myocytes. The resulting
+    mathematical model provides much improved simulations of the relative sizes
+    and time courses of the K+ currents which modulate repolarization. Our new
+    formulation represents an important first step in defining the mechanism(s)
+    of repolarization of the membrane action potential in the human ventricle.
+    Our overall goal is to understand the genesis of the T-wave of the human
+    electrocardiogram.
+    
+    The complete original paper reference is cited below:
+    
+    Contributions of HERG K+ current to repolarization of the human ventricular
+    action potential, Martin Fink, Denis Noble, Laszlo Virag, Andras Varro, and
+    Wayne R. Giles, 2008,
+    Progress in Biophysics and Molecular Biology 96, (1-3), 357-376. PubMed ID:
+    17919688
+    
+    cell diagram
+    
+    A schematic diagram describing the ion movement across the cell surface
+    membrane and the sarcoplasmic reticulum, which are described by the Fink et
+    al. 2008 mathematical model of the human ventricular myocyte.
+    """
+name: fink_noble_giles_model_2008
+# Initial values
+cell.V                        = -86.45
+iKr_Markov.Cr1                = 0.9786
+iKr_Markov.Cr2                = 0.0031
+iKr_Markov.Cr3                = 0.0029
+iKr_Markov.Or4                = 0.014
+iKr_Markov.Ir5                = 0.0014
+K.K_i                         = 141.0167
+
+[reversal_potentials]
+E_K = Environment.R * Environment.T / Environment.F * log(Environment.K_o / K.K_i)
+    in [mV]
+P_kna = 0.03
+    in [1]
+
+[K]
+dot(K_i) = -(IKr.i_Kr + cell.i_Stim) / (cell.Vol_c * Environment.F) * cell.Cm
+    in [mM]
+
+[Environment]
+F =  9.64853414999999950e4 [C/mol]
+    in [C/mol]
+K_o = 5.4 [mM]
+    in [mM]
+Na_o = 140 [mM]
+    in [mM]
+R = 8314.472 [mJ/mol/K]
+    in [mJ/mol/K]
+T = 310 [K]
+    in [K]
+time = 0 [ms] bind time
+    in [ms]
+
+[IKr]
+g_Kr_0 = 0.024 [mS/uF]
+    in [mS/uF]
+i_Kr = g_Kr_0 * (Environment.T / 35 [K] - 55 / 7) * sqrt(Environment.K_o / 5.4 [mM]) * iKr_Markov.Or4 * (cell.V - reversal_potentials.E_K)
+    in [A/F]
+
+[cell]
+Cm = 0.115 [nF]
+    in [nF]
+dot(V) = -i_tot
+    in [mV]
+Vol_c = 0.016404 [nL]
+    in [nL]
+i_Stim = piecewise(Environment.time - floor(Environment.time / stim_Period) * stim_Period >= 100 [ms] and Environment.time - floor(Environment.time / stim_Period) * stim_Period <= 103 [ms], -12 [A/F], 0 [A/F])
+    in [A/F]
+i_tot = IKr.i_Kr + i_Stim
+    in [A/F]
+stim_Period = 1000 [ms]
+    in [ms]
+
+[iKr_Markov]
+dot(Cr1) = beta_xr1 * Cr2 - alpha_xr1 * Cr1
+    in [1]
+dot(Cr2) = alpha_xr1 * Cr1 + beta_xr2 * Cr3 - (alpha_xr2 + beta_xr1) * Cr2
+    in [1]
+dot(Cr3) = alpha_xr2 * Cr2 + beta_xr3 * Or4 - (alpha_xr3 + beta_xr2) * Cr3
+    in [1]
+dot(Ir5) = alpha_xr4 * Or4 - beta_xr4 * Ir5
+    in [1]
+dot(Or4) = alpha_xr3 * Cr3 + beta_xr4 * Ir5 - (alpha_xr4 + beta_xr3) * Or4
+    in [1]
+T_Base = 310 [K]
+    in [K]
+alpha_xr1 = 1 [mS/uF] * Environment.T / T_Base * exp(24.335 + T_Base / Environment.T * (0.0112 [1/mV] * cell.V - 25.914))
+    in [mS/uF]
+alpha_xr2 = 1 [mS/uF] * Environment.T / T_Base * exp(22.746 + T_Base / Environment.T * (0 [1/mV] * cell.V - 25.914))
+    in [mS/uF]
+alpha_xr3 = 1 [mS/uF] * Environment.T / T_Base * exp(22.098 + T_Base / Environment.T * (0.0365 [1/mV] * cell.V - 25.914))
+    in [mS/uF]
+alpha_xr4 = 1 [mS/uF] * Environment.T / T_Base * exp(30.016 + T_Base / Environment.T * (0.0223 [1/mV] * cell.V - 30.888)) * (5.4 [mM] / Environment.K_o)^0.4
+    in [mS/uF]
+beta_xr1 = 1 [mS/uF] * Environment.T / T_Base * exp(13.688 + T_Base / Environment.T * (-0.0603 [1/mV] * cell.V - 15.707))
+    in [mS/uF]
+beta_xr2 = 1 [mS/uF] * Environment.T / T_Base * exp(13.193 + T_Base / Environment.T * (0 [1/mV] * cell.V - 15.707))
+    in [mS/uF]
+beta_xr3 = 1 [mS/uF] * Environment.T / T_Base * exp(7.313 + T_Base / Environment.T * (-0.0399 [1/mV] * cell.V - 15.707))
+    in [mS/uF]
+beta_xr4 = 1 [mS/uF] * Environment.T / T_Base * exp(30.061 + T_Base / Environment.T * (-0.0312 [1/mV] * cell.V - 33.243))
+    in [mS/uF]
+
+[[protocol]]
+# Level  Start    Length   Period   Multiplier
+1.0      100.0    0.5      1000.0   0
+
+[[script]]
+import matplotlib.pyplot as plt
+import myokit
+
+# Get model and protocol, create simulation
+m = get_model()
+p = get_protocol()
+s = myokit.Simulation(m, p)
+
+# Run simulation
+d = s.run(1000)
+
+# Display the results
+var = 'Environment.time'
+plt.figure()
+plt.plot(d.time(), d[var])
+plt.title(var)
+plt.show()
+
