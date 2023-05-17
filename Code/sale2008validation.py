@@ -28,7 +28,7 @@ voltages = np.subtract(voltages, min(voltages))
 
 plt.figure()
 plt.xlabel('Time (ms)')
-plt.ylabel('Normalised volatage and current')
+plt.ylabel('Normalised voltage and current')
 plt.plot(times, np.divide(voltages,max(voltages)),label='Voltage')
 plt.plot(log2['environment.t'],np.divide(log2['environment.Iherg'],max(log2['environment.Iherg'])))
 plt.plot(log3['environment.t'],np.divide(log3['environment.Iherg'],max(log2['environment.Iherg'])))
