@@ -2,8 +2,8 @@
 name: hERG1a1b independence model
 desc: A hERG1a1b model built using the subunit independence assumption of McGahan 2022
 #Initial values
-aSub.act = 0
-aSub.rec = 1
+aSub.act = 0.997
+aSub.rec = 0.03
 bSub.act = 0
 bSub.rec = 1
 
@@ -45,13 +45,13 @@ dot(rec) = (inf - rec) / tau
     tau = 1 / (k3 + k4)
     k3 = p5 * exp(p6 * V)
     k4 = p7 * exp(-p8 * V)
-p1 = 2.26e-4 [1/ms]
+p1 = 5e-4 [1/ms]
 p2 = 0.0699 [1/mV]
-p3 = 3.45e-5 [1/ms]
+p3 = 2e-4 [1/ms]
 p4 = 0.05462 [1/mV]
-p5 = 0.0873 [1/ms]
+p5 = 0.2 [1/ms]
 p6 = 8.91e-3 [1/mV]
-p7 = 5.15e-3 [1/ms]
+p7 = 0.031 [1/ms]
 p8 = 0.03158 [1/mV]
 
 [bSub]
@@ -67,13 +67,13 @@ dot(rec) = (inf - rec) / tau
     tau = 1 / (k3 + k4)
     k3 = p5 * exp(p6 * V)
     k4 = p7 * exp(-p8 * V)
-p1 = 2.26e-4 [1/ms]
+p1 = 5e-4 [1/ms]
 p2 = 0.0699 [1/mV]
-p3 = 3.45e-5 [1/ms]
+p3 = 2e-4 [1/ms]
 p4 = 0.05462 [1/mV]
-p5 = 0.0873 [1/ms]
+p5 = 0.2 [1/ms]
 p6 = 8.91e-3 [1/mV]
-p7 = 5.15e-3 [1/ms]
+p7 = 0.031 [1/ms]
 p8 = 0.03158 [1/mV]
 
 [[protocol]]
