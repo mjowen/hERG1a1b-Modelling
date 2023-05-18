@@ -124,7 +124,7 @@ boundaries = AdvancedBoundaries()
 #%% Setup and run optimisiation
 np.random.seed(2)
 
-iterCount = 3
+iterCount = 50
 
 transformation = pints.ComposedTransformation(
     pints.LogTransformation(n_parameters=1),       # p1 (a-type)
@@ -199,8 +199,8 @@ def boundary_plot():
     # Calculate the lower and upper boundaries on p2 and p4 (which are the same as those on p6 and p8)
     p2_min = (np.log(km_min) - np.log(px)) / 40
     p2_max = (np.log(km_max) - np.log(px)) / 40
-    p4_min = (np.log(km_min) - np.log(px)) / 120
-    p4_max = (np.log(km_max) - np.log(px)) / 120
+    p4_min = (np.log(km_min) - np.log(px)) / 100
+    p4_max = (np.log(km_max) - np.log(px)) / 100
 
     # But p2 and p4 are also bounded by the parameter boundaries, so add that in too:
     p2_min = np.maximum(p2_min, b_min)
@@ -247,30 +247,30 @@ ax1, ax2 = boundary_plot()
 p_good = np.array([1e-2, 0.15, 1e-2, 0.05, 1e-2, 0.15, 1e-2, 0.05])
 
 # Create a method that draws a point in p1/p2 space
-def check_p1p2(p1, p2):
+def check_p1p2(p1, p2, foract):
     p = np.copy(p_good)
     p[0] = p1
     p[1] = p2
-    if boundaries.check(p):
+    if foract:
         ax1.plot(p1, p2, 'o', color='tab:blue')
     else:
         ax1.plot(p1, p2, 'x', color='tab:red')
 
 # Create a method that draws a point in p3/p4 space
-def check_p3p4(p3, p4):
+def check_p3p4(p3, p4, foract):
     p = np.copy(p_good)
     p[2] = p3
     p[3] = p4
-    if boundaries.check(p):
+    if foract:
         ax2.plot(p3, p4, 'o', color='tab:blue')
     else:
         ax2.plot(p3, p4, 'x', color='tab:red')
 
 for i in range(iterCount):
-    check_p1p2(xbests[i,0],xbests[i,1])
-    check_p3p4(xbests[i,2],xbests[i,3])
-    check_p1p2(xbests[i,4],xbests[i,5])
-    check_p3p4(xbests[i,6],xbests[i,7])
+    check_p1p2(xbests[i,0],xbests[i,1], True)
+    check_p3p4(xbests[i,2],xbests[i,3], True)
+    check_p1p2(xbests[i,4],xbests[i,5], False)
+    check_p3p4(xbests[i,6],xbests[i,7], False)
 
 plt.show()
 
