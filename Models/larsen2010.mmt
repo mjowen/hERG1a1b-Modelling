@@ -9,15 +9,15 @@ iKr_Markov.Ir5                = 0.0014
 K.K_i                         = 141.0167
 
 [reversal_potentials]
-E_K = Environment.R * Environment.T / Environment.F * log(Environment.K_o / K.K_i)
+E_K = environment.R * environment.T / environment.F * log(environment.K_o / K.K_i)
     in [mV]
 
 [K]
-#dot(K_i) = -(IKr.i_Kr) / (cell.Vol_c * Environment.F) * cell.Cm
+#dot(K_i) = -(IKr.i_Kr) / (cell.Vol_c * environment.F) * cell.Cm
 #    in [mM]
 dot(K_i) = 0
 
-[Environment]
+[environment]
 F =  9.6485e4 [C/mol]
     in [C/mol]
 K_o = 4 [mM]
@@ -28,17 +28,19 @@ T = 296 [K]
     in [K]
 time = 0 [ms] bind time
     in [ms]
+IKr = IKr.i_Kr
 
 [IKr]
 g_Kr_0 = 0.024 [mS/uF]
     in [mS/uF]
-i_Kr = g_Kr_0 * (Environment.T / 35 [K] - 55 / 7) * sqrt(Environment.K_o / 5.4 [mM]) * iKr_Markov.Or4 * (cell.V - reversal_potentials.E_K)
+i_Kr = g_Kr_0 * (environment.T / 35 [K] - 55 / 7) * sqrt(environment.K_o / 5.4 [mM]) * iKr_Markov.Or4 * (cell.V - reversal_potentials.E_K)
     in [A/F]
 
 [cell]
 Cm = 0.115 [nF]
     in [nF]
-V = 40 bind pace
+V = 40 [mV] bind pace
+    in [mV]
 Vol_c = 0.016404 [nL]
     in [nL]
 
@@ -55,21 +57,21 @@ dot(Or4) = alpha_xr3 * Cr3 + beta_xr4 * Ir5 - (alpha_xr4 + beta_xr3) * Or4
     in [1]
 T_Base = 310 [K]
     in [K]
-alpha_xr1 = alpha3Scale*1 [mS/uF] * Environment.T / T_Base * exp(24.335 + T_Base / Environment.T * (0.0112 [1/mV] * cell.V - 25.914))
+alpha_xr1 = alpha3Scale*1 [mS/uF] * environment.T / T_Base * exp(24.335 + T_Base / environment.T * (0.0112 [1/mV] * cell.V - 25.914))
     in [mS/uF]
-alpha_xr2 = 1 [mS/uF] * Environment.T / T_Base * exp(22.746 + T_Base / Environment.T * (0 [1/mV] * cell.V - 25.914))
+alpha_xr2 = 1 [mS/uF] * environment.T / T_Base * exp(22.746 + T_Base / environment.T * (0 [1/mV] * cell.V - 25.914))
     in [mS/uF]
-alpha_xr3 = 1 [mS/uF] * Environment.T / T_Base * exp(22.098 + T_Base / Environment.T * (0.0365 [1/mV] * cell.V - 25.914))
+alpha_xr3 = 1 [mS/uF] * environment.T / T_Base * exp(22.098 + T_Base / environment.T * (0.0365 [1/mV] * cell.V - 25.914))
     in [mS/uF]
-alpha_xr4 = 1 [mS/uF] * Environment.T / T_Base * exp(30.016 + T_Base / Environment.T * (0.0223 [1/mV] * cell.V - 30.888)) * (5.4 [mM] / Environment.K_o)^0.4
+alpha_xr4 = 1 [mS/uF] * environment.T / T_Base * exp(30.016 + T_Base / environment.T * (0.0223 [1/mV] * cell.V - 30.888)) * (5.4 [mM] / environment.K_o)^0.4
     in [mS/uF]
-beta_xr1 = 1 [mS/uF] * Environment.T / T_Base * exp(13.688 + T_Base / Environment.T * (-0.0603 [1/mV] * cell.V - 15.707))
+beta_xr1 = 1 [mS/uF] * environment.T / T_Base * exp(13.688 + T_Base / environment.T * (-0.0603 [1/mV] * cell.V - 15.707))
     in [mS/uF]
-beta_xr2 = 1 [mS/uF] * Environment.T / T_Base * exp(13.193 + T_Base / Environment.T * (0 [1/mV] * cell.V - 15.707))
+beta_xr2 = 1 [mS/uF] * environment.T / T_Base * exp(13.193 + T_Base / environment.T * (0 [1/mV] * cell.V - 15.707))
     in [mS/uF]
-beta_xr3 = beta3Scale*1 [mS/uF] * Environment.T / T_Base * exp(7.313 + T_Base / Environment.T * (-0.0399 [1/mV] * cell.V - 15.707))
+beta_xr3 = beta3Scale*1 [mS/uF] * environment.T / T_Base * exp(7.313 + T_Base / environment.T * (-0.0399 [1/mV] * cell.V - 15.707))
     in [mS/uF]
-beta_xr4 = beta4Scale*1 [mS/uF] * Environment.T / T_Base * exp(30.061 + T_Base / Environment.T * (-0.0312 [1/mV] * cell.V - 33.243))
+beta_xr4 = beta4Scale*1 [mS/uF] * environment.T / T_Base * exp(30.061 + T_Base / environment.T * (-0.0312 [1/mV] * cell.V - 33.243))
     in [mS/uF]
 hERG1b = 0 #Possible values 0, 20, 40, 60, 80, 100
 alpha3Scale = piecewise(hERG1b==0, 1, hERG1b==20, 1.5, hERG1b==40, 1.5, hERG1b==60, 1.5, hERG1b==80, 1.5, hERG1b==100, 1.5, 1)
@@ -93,7 +95,7 @@ s = myokit.Simulation(m, p)
 d = s.run(1000)
 
 # Display the results
-var = 'Environment.time'
+var = 'environment.time'
 plt.figure()
 plt.plot(d.time(), d[var])
 plt.title(var)

@@ -56,8 +56,8 @@ for i in range(len(voltageKeys)):
     plt.figure(1)
     plt.plot(plotTimes, log2['stimulus.IStim'])
     plt.figure(2)
-    plt.plot(log2['environment.t'],log2['environment.Iherg'])
-    outputCurrents[i,:] = log2['environment.Iherg']
+    plt.plot(log2['environment.t'],log2['environment.IKr'])
+    outputCurrents[i,:] = log2['environment.IKr']
     sim.reset()
 
 plt.figure(1)
@@ -133,8 +133,8 @@ for i in range(len(voltageKeys)):
     plt.figure(1)
     plt.plot(plotTimes, log2['stimulus.IStim'])
     plt.figure(2)
-    plt.plot(log2['environment.t'],log2['environment.Iherg'])
-    outputCurrents[i,:] = log2['environment.Iherg']
+    plt.plot(log2['environment.t'],log2['environment.IKr'])
+    outputCurrents[i,:] = log2['environment.IKr']
     sim.reset()
 
 plt.figure(1)
@@ -187,8 +187,8 @@ for i in range(len(voltageKeys)):
     plt.figure(1)
     plt.plot(plotTimes, log2['stimulus.IStim'])
     plt.figure(2)
-    plt.plot(log2['environment.t'],log2['environment.Iherg'])
-    outputCurrents[i,:] = log2['environment.Iherg']
+    plt.plot(log2['environment.t'],log2['environment.IKr'])
+    outputCurrents[i,:] = log2['environment.IKr']
     sim.reset()
 
 plt.figure(1)

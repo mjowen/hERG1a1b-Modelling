@@ -9,8 +9,8 @@ log = myokit.DataLog.load_csv('.\Protocols\Sale 2008\AP Protocol.csv')
 
 print(log.keys())
 
-times = log['Time']
-voltages = log['Voltage']
+times = log['time']
+voltages = log['voltage']
 
 sim = myokit.Simulation(model1a1b)
 sim2 = myokit.Simulation(model1a)
@@ -30,7 +30,7 @@ plt.figure()
 plt.xlabel('Time (ms)')
 plt.ylabel('Normalised voltage and current')
 plt.plot(times, np.divide(voltages,max(voltages)),label='Voltage')
-plt.plot(log2['environment.t'],np.divide(log2['environment.Iherg'],max(log2['environment.Iherg'])))
-plt.plot(log3['environment.t'],np.divide(log3['environment.Iherg'],max(log2['environment.Iherg'])))
+plt.plot(log2['environment.t'],np.divide(log2['environment.IKr'],max(log2['environment.IKr'])))
+plt.plot(log3['environment.t'],np.divide(log3['environment.IKr'],max(log2['environment.IKr'])))
 
 

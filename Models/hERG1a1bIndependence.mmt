@@ -20,7 +20,7 @@ Ki = 140 [mmol]
 gherg = 0.1524 [uS]
     in [mS]
 Ek = R*T/F*log(Ko/Ki)
-Iherg = gherg*aSub.open^subunits.a*bSub.open^subunits.b*(V-Ek)
+IKr = gherg*aSub.open^subunits.a*bSub.open^subunits.b*(V-Ek)
 
 
 [stimulus]
@@ -30,7 +30,7 @@ pace = 0 bind pace
 
 [subunits]
 a = 4
-b = 0
+b = 4-a
 
 [aSub]
 use stimulus.IStim as V

@@ -32,9 +32,9 @@ class Model(pints.ForwardModel):
         
         # Run a simulation
         tmax = times[-1] + 0.1
-        log = self.sim.run(tmax, log_times=times, log=['environment.Iherg'])
+        log = self.sim.run(tmax, log_times=times, log=['environment.IKr'])
         
-        return np.divide(log['environment.Iherg'],max(log['environment.Iherg']))
+        return np.divide(log['environment.IKr'],max(log['environment.IKr']))
 
 # Seed numpy's random generator, just to make sure we get the same example every time
 np.random.seed(1)
