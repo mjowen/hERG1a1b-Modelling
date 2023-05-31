@@ -1,0 +1,96 @@
+[[model]]
+name: perissinotti_2018_m1
+# Initial values
+states.C3                = 1
+states.C2                = 0
+states.C1                = 0
+states.O                = 0
+states.I                = 0
+
+[environment]
+F =  9.6485e4 [C/mol]
+    in [C/mol]
+K_o = 5.4 [mM]
+    in [mM]
+K_i = 145 [mM] #Reported in VGC-KiMo
+    in [mM]
+R = 8315 [mJ/mol/K]
+    in [mJ/mol/K]
+T = 296 [K]
+    in [K]
+time = 0 [ms] bind time
+    in [ms]
+g_0_Kr = 0.024 [mS/uF]
+    in [mS/uF]
+g_Kr = g_0_Kr * (T / 35 [K] - 55 / 7) * sqrt(environment.K_o / 5.4 [mM])
+E_K = R * T / F * log(K_o / K_i)
+    in [mV]
+IKr = g_Kr * states.O * (stimulus.IStim - E_K)
+    in [A/F]
+
+[stimulus]
+amplitude = 1 [uA/cm^2]
+IStim = pace * amplitude
+pace = 0 bind pace
+
+[states]
+dot(C3) = be*C2 - ae*C3
+    in [1]
+dot(C2) = ae*C3 + bin*C1 - be*C2 - ain*C2
+    in [1]
+dot(C1) = ain*C2 + bb*O - bin*C1 - aa*C1
+    in [1]
+dot(O) = aa*C1 + ai*I - bi*O - bb*O
+        in [1]
+dot(I) = bi*O - ai*I
+    in [1]
+
+aeAlpha = if(hERG1b == 1, 4.71e-2, 3.39e-2)
+aeBeta = if(hERG1b == 1, 9.36e-3, 1.04e-2)
+beAlpha = if(hERG1b == 1, 7.43e-2, 4.82e-2)
+beBeta = if(hERG1b == 1, -5.05e-2, -6.91e-2)
+ainAlpha = if(hERG1b == 1, 5.01e-2, 2.20e-2)
+binAlpha = if(hERG1b == 1, 2.95e-2, 1.36e-2)
+aiAlpha = if(hERG1b == 1, 2.80e-2, 6.63e-3)
+aiBeta = if(hERG1b == 1, -3.06e-2, -3.89e-2)
+biAlpha = if(hERG1b == 1, 7.41e-2, 7.41e-2)
+biBeta = if(hERG1b == 1, 1.88e-2, 2.80e-2)
+aaAlpha = if(hERG1b == 1, 1.71e-2, 4.94e-3)
+aaBeta = if(hERG1b == 1, 3.05e-2, 4.31e-2)
+bbAlpha = if(hERG1b == 1, 1.61e-3, 2.06e-4)
+bbBeta = if(hERG1b == 1, -3.44e-2, -3.76e-2)
+
+ae = aeAlpha*exp(aeBeta*stimulus.IStim)
+be = beAlpha*exp(beBeta*stimulus.IStim)
+ain = ainAlpha
+bin = binAlpha
+ai = aiAlpha*exp(aiBeta*stimulus.IStim)
+bi = biAlpha*exp(biBeta*stimulus.IStim)*(5.4 [mM] / environment.K_o)^0.4
+aa = aaAlpha*exp(aaBeta*stimulus.IStim)
+bb = bbAlpha*exp(bbBeta*stimulus.IStim)
+
+hERG1b = 0 #Possible values 0, 1
+
+[[protocol]]
+# Level  Start    Length   Period   Multiplier
+40      0    1000      1000.0   0
+
+[[script]]
+import matplotlib.pyplot as plt
+import myokit
+
+# Get model and protocol, create simulation
+m = get_model()
+p = get_protocol()
+s = myokit.Simulation(m, p)
+
+# Run simulation
+d = s.run(1000)
+
+# Display the results
+var = 'environment.time'
+plt.figure()
+plt.plot(d.time(), d[var])
+plt.title(var)
+plt.show()
+
