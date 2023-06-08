@@ -38,11 +38,11 @@ dot(C3) = be*C2 - ae*C3
     in [1]
 dot(C2) = ae*C3 + bin*C1 - be*C2 - ain*C2
     in [1]
-dot(C1) = ain*C2 + bb*O - bin*C1 - aa*C1 - biStar*C1
+dot(C1) = ain*C2 + bb*O - bin*C1 - aa*C1 - biStar*C1 + aiStar*I
     in [1]
 dot(O) = aa*C1 + ai*I - bi*O - bb*O
         in [1]
-dot(I) = bi*O + biStar*C1 - ai*I
+dot(I) = bi*O + biStar*C1 - ai*I - aiStar*I
     in [1]
 
 aeAlpha = if(hERG1b == 1, 1.19e-2, 3.77e-3)
@@ -71,6 +71,7 @@ bi = biAlpha*exp(biBeta*stimulus.IStim)
 aa = aaAlpha*exp(aaBeta*stimulus.IStim)
 bb = bbAlpha*exp(bbBeta*stimulus.IStim)
 biStar = biStarAlpha*exp(biStarBeta*stimulus.IStim)
+aiStar = biStar*ai*bb/(aa*bi)
 
 hERG1b = 0 #Possible values 0, 1
 
