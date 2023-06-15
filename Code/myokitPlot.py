@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from Code.myokitGeneral import *
 
-def simplePlot(modelName, protocol, protocolName = 'voltage', factorVars = [], factorVals = [], plotProtocol=False, xlabel = 'Time (ms)', ylabel = 'Current (nA)', title = ''):
+def simplePlot(modelName, protocol, protocolName = 'voltage', factorVars = [], factorVals = [], plotProtocol=False, xlabel = 'Time (ms)', ylabel = 'Current (nA)', title = '', output = 'environment.IKr', initialValues = []):
     """
     Plots a current trace predicted by a model for a given protocol. Model parameters can be changed by using factorVars and factorVals
     Parameters
@@ -25,14 +25,16 @@ def simplePlot(modelName, protocol, protocolName = 'voltage', factorVars = [], f
         Label for the y-axis of the plot. Default is Current (nA)
     title : string
         Label for the title of the plot. Default is modelName
+    output : string
+        Model variable to plot. Default is 'environment.IKr'
     Returns
     -------
     None.
     """
     model = loadModel(modelName)
-    sim = compileModel(model, factorVars, factorVals)
+    sim = compileModel(model, factorVars, factorVals, initialValues = initialValues)
     sim, tmax = addProtocol(sim, protocol, protocolName, plotProtocol)
-    current = simulate(sim, tmax)[0]
+    current = simulate(sim, tmax, output=[output])[0]
     plt.figure()
     plt.plot(np.arange(tmax),current)
     if len(title)==0:

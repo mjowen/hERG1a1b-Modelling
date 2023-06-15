@@ -16,13 +16,13 @@ K_i = 145 [mM] #Reported in VGC-KiMo
     in [mM]
 R = 8315 [mJ/mol/K]
     in [mJ/mol/K]
-T = 296 [K]
+T = 310 [K] #296 or 310
     in [K]
 time = 0 [ms] bind time
     in [ms]
 g_0_Kr = 0.024 [mS/uF]
     in [mS/uF]
-g_Kr = g_0_Kr * (T / 35 [K] - 55 / 7) * sqrt(environment.K_o / 5.4 [mM])
+g_Kr = g_0_Kr * (T / 35 [K] - 55 / 7) * sqrt(K_o / 5.4 [mM])
 E_K = R * T / F * log(K_o / K_i)
     in [mV]
 IKr = g_Kr * states.O * (stimulus.IStim - E_K)

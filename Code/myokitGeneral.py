@@ -32,7 +32,7 @@ def loadModel(modelName):
     model = myokit.load_model('.\\Models\\'+modelName+'.mmt')
     return model
 
-def compileModel(model, factorVars = [], factorVals = []):
+def compileModel(model, factorVars = [], factorVals = [], initialValues = []):
     """
     Generates a Myokit sim object from model after changing the factorVars variables/constants to the values given in factorVals
     Parameters
@@ -47,6 +47,8 @@ def compileModel(model, factorVars = [], factorVals = []):
     -------
     sim : Myokit simulation object
     """
+    if len(initialValues)>0:
+        model.set_initial_values(initialValues)
     for i in range(len(factorVals)):
         model.set_value(factorVars[i],factorVals[i])
     sim = myokit.Simulation(model)
