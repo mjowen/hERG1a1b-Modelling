@@ -1,0 +1,706 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<model xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" name="Sale_2008_1a1b">
+  <units name="A_per_F">
+    <unit units="gram" multiplier="1000"/>
+    <unit units="metre" exponent="2.0"/>
+    <unit units="second" exponent="-4.0"/>
+    <unit units="ampere" exponent="-1.0"/>
+  </units>
+  <units name="C_per_mol">
+    <unit units="second"/>
+    <unit units="ampere"/>
+    <unit units="mole" exponent="-1.0"/>
+  </units>
+  <units name="mJ_per_mol_per_K">
+    <unit units="gram"/>
+    <unit units="metre" exponent="2.0"/>
+    <unit units="second" exponent="-2.0"/>
+    <unit units="kelvin" exponent="-1.0"/>
+    <unit units="mole" exponent="-1.0"/>
+  </units>
+  <units name="mS_per_uF">
+    <unit units="second" exponent="-1.0" multiplier="1000"/>
+  </units>
+  <units name="mV">
+    <unit units="gram"/>
+    <unit units="metre" exponent="2.0"/>
+    <unit units="second" exponent="-3.0"/>
+    <unit units="ampere" exponent="-1.0"/>
+  </units>
+  <units name="mmol">
+    <unit units="mole" multiplier="0.001"/>
+  </units>
+  <units name="ms">
+    <unit units="second" multiplier="0.001"/>
+  </units>
+  <units name="per_s_per_mol_times_1e3">
+    <unit units="second" exponent="-1.0" multiplier="1000"/>
+    <unit units="mole" exponent="-1.0"/>
+  </units>
+  <component name="environment">
+    <variable name="Ek" units="mV"/>
+    <variable name="F" units="C_per_mol" initial_value="96485.0"/>
+    <variable name="IKr" units="A_per_F"/>
+    <variable name="Ki" units="mmol" initial_value="140.0"/>
+    <variable name="Ko" units="mmol" public_interface="out" initial_value="4.0"/>
+    <variable name="R" units="mJ_per_mol_per_K" initial_value="8315.0"/>
+    <variable name="T" units="kelvin"/>
+    <variable name="VFRT" units="dimensionless" public_interface="out"/>
+    <variable name="e4031" units="mole" public_interface="out" initial_value="5.5e-08"/>
+    <variable name="gherg" units="mS_per_uF"/>
+    <variable name="gherg_0" units="mS_per_uF" initial_value="0.0048"/>
+    <variable name="o" units="dimensionless" public_interface="in"/>
+    <variable name="pace" units="mV" public_interface="in"/>
+    <variable name="t" units="ms" public_interface="out"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply>
+        <eq/>
+        <ci>Ek</ci>
+        <apply>
+          <times/>
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <ci>R</ci>
+              <ci>T</ci>
+            </apply>
+            <ci>F</ci>
+          </apply>
+          <apply>
+            <ln/>
+            <apply>
+              <divide/>
+              <ci>Ko</ci>
+              <ci>Ki</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>IKr</ci>
+        <apply>
+          <times/>
+          <apply>
+            <times/>
+            <ci>gherg</ci>
+            <ci>o</ci>
+          </apply>
+          <apply>
+            <minus/>
+            <ci>pace</ci>
+            <ci>Ek</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>T</ci>
+        <apply>
+          <plus/>
+          <cn cellml:units="kelvin">273.0</cn>
+          <cn cellml:units="kelvin">34.0</cn>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>VFRT</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <ci>pace</ci>
+            <ci>F</ci>
+          </apply>
+          <apply>
+            <times/>
+            <ci>R</ci>
+            <ci>T</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>gherg</ci>
+        <apply>
+          <times/>
+          <ci>gherg_0</ci>
+          <apply>
+            <root/>
+            <apply>
+              <divide/>
+              <ci>Ko</ci>
+              <cn cellml:units="mmol">5.4</cn>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  <component name="states">
+    <variable name="Ko" units="mmol" public_interface="in"/>
+    <variable name="VFRT" units="dimensionless" public_interface="in"/>
+    <variable name="alpha" units="mS_per_uF"/>
+    <variable name="alpha1" units="mS_per_uF" initial_value="4.34"/>
+    <variable name="alpha2" units="mS_per_uF"/>
+    <variable name="alphai" units="mS_per_uF"/>
+    <variable name="b" units="dimensionless" initial_value="0.0"/>
+    <variable name="beta" units="mS_per_uF"/>
+    <variable name="beta1" units="mS_per_uF" initial_value="0.5409"/>
+    <variable name="beta2" units="mS_per_uF"/>
+    <variable name="betai" units="mS_per_uF"/>
+    <variable name="c1" units="dimensionless" initial_value="0.0"/>
+    <variable name="c2" units="dimensionless" initial_value="0.0"/>
+    <variable name="c3" units="dimensionless" initial_value="1.0"/>
+    <variable name="cb1" units="dimensionless" initial_value="0.0"/>
+    <variable name="cb2" units="dimensionless" initial_value="0.0"/>
+    <variable name="cb3" units="dimensionless" initial_value="0.0"/>
+    <variable name="e4031" units="mole" public_interface="in"/>
+    <variable name="i" units="dimensionless" initial_value="0.0"/>
+    <variable name="ib" units="dimensionless" initial_value="0.0"/>
+    <variable name="mu" units="mS_per_uF"/>
+    <variable name="o" units="dimensionless" public_interface="out" initial_value="0.0"/>
+    <variable name="off" units="mS_per_uF" initial_value="5e-06"/>
+    <variable name="on" units="mS_per_uF"/>
+    <variable name="t" units="ms" public_interface="in"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply>
+        <eq/>
+        <ci>alpha</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.03552</cn>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <cn cellml:units="dimensionless">1.812</cn>
+              <ci>VFRT</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>alpha2</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.0262</cn>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <cn cellml:units="dimensionless">1.241</cn>
+              <ci>VFRT</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>alphai</ci>
+        <apply>
+          <times/>
+          <apply>
+            <times/>
+            <cn cellml:units="mS_per_uF">0.1139</cn>
+            <apply>
+              <exp/>
+              <apply>
+                <times/>
+                <apply>
+                  <minus/>
+                  <cn cellml:units="dimensionless">0.4898</cn>
+                </apply>
+                <ci>VFRT</ci>
+              </apply>
+            </apply>
+          </apply>
+          <apply>
+            <divide/>
+            <cn cellml:units="mmol">4.5</cn>
+            <ci>Ko</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>b</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <plus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci>cb1</ci>
+                <ci>alpha2</ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci>ib</ci>
+                <ci>alphai</ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci>o</ci>
+              <ci>on</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>b</ci>
+            <apply>
+              <plus/>
+              <apply>
+                <plus/>
+                <ci>beta2</ci>
+                <ci>betai</ci>
+              </apply>
+              <ci>off</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>beta</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.001807</cn>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <apply>
+                <minus/>
+                <cn cellml:units="dimensionless">1.913</cn>
+              </apply>
+              <ci>VFRT</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>beta2</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.0033</cn>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <apply>
+                <minus/>
+                <cn cellml:units="dimensionless">0.9571</cn>
+              </apply>
+              <ci>VFRT</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>betai</ci>
+        <apply>
+          <times/>
+          <apply>
+            <times/>
+            <cn cellml:units="mS_per_uF">0.1254</cn>
+            <apply>
+              <exp/>
+              <apply>
+                <times/>
+                <cn cellml:units="dimensionless">0.3781</cn>
+                <ci>VFRT</ci>
+              </apply>
+            </apply>
+          </apply>
+          <apply>
+            <power/>
+            <apply>
+              <divide/>
+              <cn cellml:units="mmol">4.5</cn>
+              <ci>Ko</ci>
+            </apply>
+            <cn cellml:units="dimensionless">3.0</cn>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>c1</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <plus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci>c2</ci>
+                <ci>alpha1</ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci>o</ci>
+                <ci>beta2</ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci>i</ci>
+              <ci>mu</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>c1</ci>
+            <apply>
+              <plus/>
+              <ci>beta1</ci>
+              <apply>
+                <times/>
+                <cn cellml:units="dimensionless">2.0</cn>
+                <ci>alpha2</ci>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>c2</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <plus/>
+            <apply>
+              <times/>
+              <ci>c3</ci>
+              <ci>alpha</ci>
+            </apply>
+            <apply>
+              <times/>
+              <ci>c1</ci>
+              <ci>beta1</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>c2</ci>
+            <apply>
+              <plus/>
+              <ci>beta</ci>
+              <ci>alpha1</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>c3</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <times/>
+            <ci>c2</ci>
+            <ci>beta</ci>
+          </apply>
+          <apply>
+            <times/>
+            <ci>c3</ci>
+            <ci>alpha</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>cb1</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <plus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci>cb2</ci>
+                <ci>alpha1</ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci>b</ci>
+                <ci>beta2</ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci>ib</ci>
+              <ci>mu</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>cb1</ci>
+            <apply>
+              <plus/>
+              <ci>beta1</ci>
+              <apply>
+                <times/>
+                <cn cellml:units="dimensionless">2.0</cn>
+                <ci>alpha2</ci>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>cb2</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <plus/>
+            <apply>
+              <times/>
+              <ci>cb3</ci>
+              <ci>alpha</ci>
+            </apply>
+            <apply>
+              <times/>
+              <ci>cb1</ci>
+              <ci>beta1</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>cb2</ci>
+            <apply>
+              <plus/>
+              <ci>beta</ci>
+              <ci>alpha1</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>cb3</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <times/>
+            <ci>cb2</ci>
+            <ci>beta</ci>
+          </apply>
+          <apply>
+            <times/>
+            <ci>cb3</ci>
+            <ci>alpha</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>i</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <plus/>
+            <apply>
+              <times/>
+              <ci>c1</ci>
+              <ci>alpha2</ci>
+            </apply>
+            <apply>
+              <times/>
+              <ci>o</ci>
+              <ci>betai</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>i</ci>
+            <apply>
+              <plus/>
+              <ci>mu</ci>
+              <ci>alphai</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>ib</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <plus/>
+            <apply>
+              <times/>
+              <ci>cb1</ci>
+              <ci>alpha2</ci>
+            </apply>
+            <apply>
+              <times/>
+              <ci>b</ci>
+              <ci>betai</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>ib</ci>
+            <apply>
+              <plus/>
+              <ci>mu</ci>
+              <ci>alphai</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>mu</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <ci>alphai</ci>
+            <ci>beta2</ci>
+          </apply>
+          <ci>betai</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>o</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <plus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci>c1</ci>
+                <ci>alpha2</ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci>i</ci>
+                <ci>alphai</ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci>b</ci>
+              <ci>off</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>o</ci>
+            <apply>
+              <plus/>
+              <apply>
+                <plus/>
+                <ci>beta2</ci>
+                <ci>betai</ci>
+              </apply>
+              <ci>on</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>on</ci>
+        <apply>
+          <times/>
+          <ci>e4031</ci>
+          <cn cellml:units="per_s_per_mol_times_1e3">2000.0</cn>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  <component name="stimulus">
+    <variable name="pace" units="mV" public_interface="out" initial_value="0.0"/>
+  </component>
+  <connection>
+    <map_components component_1="environment" component_2="states"/>
+    <map_variables variable_1="Ko" variable_2="Ko"/>
+    <map_variables variable_1="VFRT" variable_2="VFRT"/>
+    <map_variables variable_1="e4031" variable_2="e4031"/>
+    <map_variables variable_1="o" variable_2="o"/>
+    <map_variables variable_1="t" variable_2="t"/>
+  </connection>
+  <connection>
+    <map_components component_1="environment" component_2="stimulus"/>
+    <map_variables variable_1="pace" variable_2="pace"/>
+  </connection>
+</model>

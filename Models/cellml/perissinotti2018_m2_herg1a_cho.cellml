@@ -1,0 +1,2180 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<model xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" name="perissinotti_2018_m2">
+  <units name="A_per_F">
+    <unit units="gram" multiplier="1000"/>
+    <unit units="metre" exponent="2.0"/>
+    <unit units="second" exponent="-4.0"/>
+    <unit units="ampere" exponent="-1.0"/>
+  </units>
+  <units name="C_per_mol">
+    <unit units="second"/>
+    <unit units="ampere"/>
+    <unit units="mole" exponent="-1.0"/>
+  </units>
+  <units name="mJ_per_mol_per_K">
+    <unit units="gram"/>
+    <unit units="metre" exponent="2.0"/>
+    <unit units="second" exponent="-2.0"/>
+    <unit units="kelvin" exponent="-1.0"/>
+    <unit units="mole" exponent="-1.0"/>
+  </units>
+  <units name="mS_per_uF">
+    <unit units="second" exponent="-1.0" multiplier="1000"/>
+  </units>
+  <units name="mV">
+    <unit units="gram"/>
+    <unit units="metre" exponent="2.0"/>
+    <unit units="second" exponent="-3.0"/>
+    <unit units="ampere" exponent="-1.0"/>
+  </units>
+  <units name="mmol">
+    <unit units="mole" multiplier="0.001"/>
+  </units>
+  <units name="ms">
+    <unit units="second" multiplier="0.001"/>
+  </units>
+  <units name="per_mV">
+    <unit units="gram" exponent="-1.0"/>
+    <unit units="metre" exponent="-2.0"/>
+    <unit units="second" exponent="3.0"/>
+    <unit units="ampere"/>
+  </units>
+  <component name="environment">
+    <variable name="E_K" units="mV"/>
+    <variable name="F" units="C_per_mol" initial_value="96485.0"/>
+    <variable name="IKr" units="A_per_F"/>
+    <variable name="K_i" units="mmol" initial_value="145.0"/>
+    <variable name="K_o" units="mmol" initial_value="5.4"/>
+    <variable name="O" units="dimensionless" public_interface="in"/>
+    <variable name="R" units="mJ_per_mol_per_K" initial_value="8315.0"/>
+    <variable name="T" units="kelvin" public_interface="out" initial_value="296.0"/>
+    <variable name="g_0_Kr" units="mS_per_uF" initial_value="0.024"/>
+    <variable name="g_Kr" units="mS_per_uF"/>
+    <variable name="pace" units="mV" public_interface="in"/>
+    <variable name="time" units="ms" public_interface="out"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply>
+        <eq/>
+        <ci>E_K</ci>
+        <apply>
+          <times/>
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <ci>R</ci>
+              <ci>T</ci>
+            </apply>
+            <ci>F</ci>
+          </apply>
+          <apply>
+            <ln/>
+            <apply>
+              <divide/>
+              <ci>K_o</ci>
+              <ci>K_i</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>IKr</ci>
+        <apply>
+          <times/>
+          <apply>
+            <times/>
+            <ci>g_Kr</ci>
+            <ci>O</ci>
+          </apply>
+          <apply>
+            <minus/>
+            <ci>pace</ci>
+            <ci>E_K</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>g_Kr</ci>
+        <apply>
+          <times/>
+          <apply>
+            <times/>
+            <ci>g_0_Kr</ci>
+            <apply>
+              <minus/>
+              <apply>
+                <divide/>
+                <ci>T</ci>
+                <cn cellml:units="kelvin">35.0</cn>
+              </apply>
+              <apply>
+                <divide/>
+                <cn cellml:units="dimensionless">55.0</cn>
+                <cn cellml:units="dimensionless">7.0</cn>
+              </apply>
+            </apply>
+          </apply>
+          <apply>
+            <root/>
+            <apply>
+              <divide/>
+              <ci>K_o</ci>
+              <cn cellml:units="mmol">5.4</cn>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  <component name="states">
+    <variable name="C1" units="dimensionless" initial_value="0.0"/>
+    <variable name="C2" units="dimensionless" initial_value="0.0"/>
+    <variable name="C3" units="dimensionless" initial_value="1.0"/>
+    <variable name="I" units="dimensionless" initial_value="0.0"/>
+    <variable name="O" units="dimensionless" public_interface="out" initial_value="0.0"/>
+    <variable name="T" units="kelvin" public_interface="in"/>
+    <variable name="Tbase" units="kelvin" initial_value="296.0"/>
+    <variable name="aa" units="mS_per_uF"/>
+    <variable name="aaAlpha" units="mS_per_uF"/>
+    <variable name="aaAlphaCorr" units="dimensionless"/>
+    <variable name="aaBeta" units="per_mV"/>
+    <variable name="aaBetaCorr" units="dimensionless"/>
+    <variable name="ae" units="mS_per_uF"/>
+    <variable name="aeAlpha" units="mS_per_uF"/>
+    <variable name="aeAlphaCorr" units="dimensionless"/>
+    <variable name="aeBeta" units="per_mV"/>
+    <variable name="aeBetaCorr" units="dimensionless"/>
+    <variable name="ai" units="mS_per_uF"/>
+    <variable name="aiAlpha" units="mS_per_uF"/>
+    <variable name="aiAlphaCorr" units="dimensionless"/>
+    <variable name="aiBeta" units="per_mV"/>
+    <variable name="aiBetaCorr" units="dimensionless"/>
+    <variable name="aiStar" units="mS_per_uF"/>
+    <variable name="ain" units="mS_per_uF"/>
+    <variable name="ainAlpha" units="mS_per_uF"/>
+    <variable name="ainAlphaCorr" units="dimensionless"/>
+    <variable name="bb" units="mS_per_uF"/>
+    <variable name="bbAlpha" units="mS_per_uF"/>
+    <variable name="bbAlphaCorr" units="dimensionless"/>
+    <variable name="bbBeta" units="per_mV"/>
+    <variable name="bbBetaCorr" units="dimensionless"/>
+    <variable name="be" units="mS_per_uF"/>
+    <variable name="beAlpha" units="mS_per_uF"/>
+    <variable name="beAlphaCorr" units="dimensionless"/>
+    <variable name="beBeta" units="per_mV"/>
+    <variable name="beBetaCorr" units="dimensionless"/>
+    <variable name="bi" units="mS_per_uF"/>
+    <variable name="biAlpha" units="mS_per_uF"/>
+    <variable name="biAlphaCorr" units="dimensionless"/>
+    <variable name="biBeta" units="per_mV"/>
+    <variable name="biBetaCorr" units="dimensionless"/>
+    <variable name="biStar" units="mS_per_uF"/>
+    <variable name="biStarAlpha" units="mS_per_uF"/>
+    <variable name="biStarAlphaCorr" units="dimensionless"/>
+    <variable name="biStarBeta" units="per_mV"/>
+    <variable name="biStarBetaCorr" units="dimensionless"/>
+    <variable name="bin" units="mS_per_uF"/>
+    <variable name="binAlpha" units="mS_per_uF"/>
+    <variable name="binAlphaCorr" units="dimensionless"/>
+    <variable name="cho" units="dimensionless" initial_value="1.0"/>
+    <variable name="defaultRates" units="dimensionless" initial_value="0.0"/>
+    <variable name="hERG1b" units="dimensionless" initial_value="0.0"/>
+    <variable name="pace" units="mV" public_interface="in"/>
+    <variable name="time" units="ms" public_interface="in"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>C1</ci>
+        </apply>
+        <apply>
+          <plus/>
+          <apply>
+            <minus/>
+            <apply>
+              <minus/>
+              <apply>
+                <minus/>
+                <apply>
+                  <plus/>
+                  <apply>
+                    <times/>
+                    <ci>ain</ci>
+                    <ci>C2</ci>
+                  </apply>
+                  <apply>
+                    <times/>
+                    <ci>bb</ci>
+                    <ci>O</ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <times/>
+                  <ci>bin</ci>
+                  <ci>C1</ci>
+                </apply>
+              </apply>
+              <apply>
+                <times/>
+                <ci>aa</ci>
+                <ci>C1</ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci>biStar</ci>
+              <ci>C1</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>aiStar</ci>
+            <ci>I</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>C2</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci>ae</ci>
+                <ci>C3</ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci>bin</ci>
+                <ci>C1</ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci>be</ci>
+              <ci>C2</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>ain</ci>
+            <ci>C2</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>C3</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <times/>
+            <ci>be</ci>
+            <ci>C2</ci>
+          </apply>
+          <apply>
+            <times/>
+            <ci>ae</ci>
+            <ci>C3</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>I</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci>bi</ci>
+                <ci>O</ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci>biStar</ci>
+                <ci>C1</ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci>ai</ci>
+              <ci>I</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>aiStar</ci>
+            <ci>I</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>O</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci>aa</ci>
+                <ci>C1</ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci>ai</ci>
+                <ci>I</ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci>bi</ci>
+              <ci>O</ci>
+            </apply>
+          </apply>
+          <apply>
+            <times/>
+            <ci>bb</ci>
+            <ci>O</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aa</ci>
+        <apply>
+          <times/>
+          <ci>aaAlpha</ci>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <ci>aaBeta</ci>
+              <ci>pace</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aaAlpha</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.0218</cn>
+          <ci>aaAlphaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aaAlphaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">4.037</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">7.11</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.16426</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">5.11452</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>T</ci>
+          </apply>
+          <ci>Tbase</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aaBeta</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="per_mV">0.0262</cn>
+          <ci>aaBetaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aaBetaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.389</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.37</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.1962</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.812985</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>Tbase</ci>
+          </apply>
+          <ci>T</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>ae</ci>
+        <apply>
+          <times/>
+          <ci>aeAlpha</ci>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <ci>aeBeta</ci>
+              <ci>pace</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aeAlpha</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.0069</cn>
+          <ci>aeAlphaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aeAlphaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.546</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.72</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.800032</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.07577</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>T</ci>
+          </apply>
+          <ci>Tbase</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aeBeta</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="per_mV">0.0272</cn>
+          <ci>aeBetaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aeBetaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.21</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.8</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.21655</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.858628</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>Tbase</ci>
+          </apply>
+          <ci>T</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>ai</ci>
+        <apply>
+          <times/>
+          <ci>aiAlpha</ci>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <ci>aiBeta</ci>
+              <ci>pace</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aiAlpha</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.0059</cn>
+          <ci>aiAlphaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aiAlphaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">2.949</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">8.66</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.832631</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">2.21861</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>T</ci>
+          </apply>
+          <ci>Tbase</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aiBeta</ci>
+        <apply>
+          <times/>
+          <apply>
+            <minus/>
+            <cn cellml:units="per_mV">0.0443</cn>
+          </apply>
+          <ci>aiBetaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aiBetaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <apply>
+                  <minus/>
+                  <cn cellml:units="dimensionless">0.648</cn>
+                </apply>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <apply>
+                  <minus/>
+                  <cn cellml:units="dimensionless">0.47</cn>
+                </apply>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.872266</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.986773</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>Tbase</ci>
+          </apply>
+          <ci>T</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>aiStar</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <apply>
+              <times/>
+              <ci>biStar</ci>
+              <ci>ai</ci>
+            </apply>
+            <ci>bb</ci>
+          </apply>
+          <apply>
+            <times/>
+            <ci>aa</ci>
+            <ci>bi</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>ain</ci>
+        <ci>ainAlpha</ci>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>ainAlpha</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.0266</cn>
+          <ci>ainAlphaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>ainAlphaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.35</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">3.49</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.146</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.32593</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>T</ci>
+          </apply>
+          <ci>Tbase</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>bb</ci>
+        <apply>
+          <times/>
+          <ci>bbAlpha</ci>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <ci>bbBeta</ci>
+              <ci>pace</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>bbAlpha</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.0009</cn>
+          <ci>bbAlphaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>bbAlphaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">5.678</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">86.89</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.775023</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">10.4073</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>T</ci>
+          </apply>
+          <ci>Tbase</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>bbBeta</ci>
+        <apply>
+          <times/>
+          <apply>
+            <minus/>
+            <cn cellml:units="per_mV">0.0269</cn>
+          </apply>
+          <ci>bbBetaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>bbBetaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.651</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.32</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.871463</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.992474</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>Tbase</ci>
+          </apply>
+          <ci>T</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>be</ci>
+        <apply>
+          <times/>
+          <ci>beAlpha</ci>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <ci>beBeta</ci>
+              <ci>pace</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>beAlpha</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.0227</cn>
+          <ci>beAlphaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>beAlphaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.075</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.8</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.08597</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.800571</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>T</ci>
+          </apply>
+          <ci>Tbase</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>beBeta</ci>
+        <apply>
+          <times/>
+          <apply>
+            <minus/>
+            <cn cellml:units="per_mV">0.0431</cn>
+          </apply>
+          <ci>beBetaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>beBetaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.571</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.88</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.08559</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.800093</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>Tbase</ci>
+          </apply>
+          <ci>T</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>bi</ci>
+        <apply>
+          <times/>
+          <ci>biAlpha</ci>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <ci>biBeta</ci>
+              <ci>pace</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>biAlpha</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.0622</cn>
+          <ci>biAlphaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>biAlphaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.149</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.29</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">1.43517</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.900581</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>T</ci>
+          </apply>
+          <ci>Tbase</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>biBeta</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="per_mV">0.012</cn>
+          <ci>biBetaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>biBetaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <apply>
+                  <minus/>
+                  <cn cellml:units="dimensionless">1.956</cn>
+                </apply>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <apply>
+                  <minus/>
+                  <cn cellml:units="dimensionless">1.79</cn>
+                </apply>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.809065</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.900017</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>Tbase</ci>
+          </apply>
+          <ci>T</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>biStar</ci>
+        <apply>
+          <times/>
+          <ci>biStarAlpha</ci>
+          <apply>
+            <exp/>
+            <apply>
+              <times/>
+              <ci>biStarBeta</ci>
+              <ci>pace</ci>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>biStarAlpha</ci>
+        <apply>
+          <times/>
+          <cn type="e-notation" cellml:units="mS_per_uF">1.29<sep/>-5</cn>
+          <ci>biStarAlphaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>biStarAlphaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn type="e-notation" cellml:units="dimensionless">7.9<sep/>-5</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.072</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">100.558</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.100008</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>T</ci>
+          </apply>
+          <ci>Tbase</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>biStarBeta</ci>
+        <apply>
+          <times/>
+          <cn type="e-notation" cellml:units="per_mV">2.71<sep/>-6</cn>
+          <ci>biStarBetaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>biStarBetaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">2.948</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">5.98</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">98.698</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">8.44802</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>Tbase</ci>
+          </apply>
+          <ci>T</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>bin</ci>
+        <ci>binAlpha</ci>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>binAlpha</ci>
+        <apply>
+          <times/>
+          <cn cellml:units="mS_per_uF">0.1348</cn>
+          <ci>binAlphaCorr</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>binAlphaCorr</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1.0</cn>
+                <apply>
+                  <eq/>
+                  <ci>defaultRates</ci>
+                  <cn cellml:units="dimensionless">1.0</cn>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.122</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.81</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.834551</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">0.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <piece>
+                <cn cellml:units="dimensionless">0.855167</cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <eq/>
+                    <ci>cho</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                  <apply>
+                    <eq/>
+                    <ci>hERG1b</ci>
+                    <cn cellml:units="dimensionless">1.0</cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn cellml:units="dimensionless">1.0</cn>
+              </otherwise>
+            </piecewise>
+            <ci>T</ci>
+          </apply>
+          <ci>Tbase</ci>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  <component name="stimulus">
+    <variable name="duration" units="ms" initial_value="1000.0"/>
+    <variable name="offset" units="ms" initial_value="0.0"/>
+    <variable name="pace" units="mV" public_interface="out"/>
+    <variable name="period" units="ms" initial_value="1000.0"/>
+    <variable name="time" units="ms" public_interface="in"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply>
+        <eq/>
+        <ci>pace</ci>
+        <piecewise>
+          <piece>
+            <cn cellml:units="mV">40.0</cn>
+            <apply>
+              <lt/>
+              <apply>
+                <minus/>
+                <apply>
+                  <minus/>
+                  <ci>time</ci>
+                  <ci>offset</ci>
+                </apply>
+                <apply>
+                  <times/>
+                  <ci>period</ci>
+                  <apply>
+                    <floor/>
+                    <apply>
+                      <divide/>
+                      <apply>
+                        <minus/>
+                        <ci>time</ci>
+                        <ci>offset</ci>
+                      </apply>
+                      <ci>period</ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+              <ci>duration</ci>
+            </apply>
+          </piece>
+          <otherwise>
+            <cn cellml:units="mV">0.0</cn>
+          </otherwise>
+        </piecewise>
+      </apply>
+    </math>
+  </component>
+  <connection>
+    <map_components component_1="environment" component_2="states"/>
+    <map_variables variable_1="O" variable_2="O"/>
+    <map_variables variable_1="T" variable_2="T"/>
+    <map_variables variable_1="time" variable_2="time"/>
+  </connection>
+  <connection>
+    <map_components component_1="environment" component_2="stimulus"/>
+    <map_variables variable_1="pace" variable_2="pace"/>
+    <map_variables variable_1="time" variable_2="time"/>
+  </connection>
+  <connection>
+    <map_components component_1="states" component_2="stimulus"/>
+    <map_variables variable_1="pace" variable_2="pace"/>
+  </connection>
+</model>
