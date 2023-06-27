@@ -10,10 +10,10 @@ states.I    = 0
 [environment]
 F =  9.6485e4 [C/mol]
     in [C/mol]
-K_o = 5.4 [mM]
-    in [mM]
-K_i = 145 [mM] #Reported in VGC-KiMo
-    in [mM]
+K_o = 5.4 [mmol]
+    in [mmol]
+K_i = 145 [mmol]
+    in [mmol]
 R = 8315 [mJ/mol/K]
     in [mJ/mol/K]
 T = 296 [K]
@@ -22,16 +22,16 @@ time = 0 [ms] bind time
     in [ms]
 g_0_Kr = 0.024 [mS/uF]
     in [mS/uF]
-g_Kr = g_0_Kr * (T / 35 [K] - 55 / 7) * sqrt(environment.K_o / 5.4 [mM])
+g_Kr = g_0_Kr * (T / 35 [K] - 55 / 7) * sqrt(environment.K_o / 5.4 [mmol])
+    in [mS/uF]
 E_K = R * T / F * log(K_o / K_i)
     in [mV]
-IKr = g_Kr * states.O * (stimulus.IStim - E_K)
+IKr = g_Kr * states.O * (stimulus.pace - E_K)
     in [A/F]
 
 [stimulus]
-amplitude = 1 [uA/cm^2]
-IStim = pace * amplitude
-pace = 0 bind pace
+pace = 0 [mV] bind pace
+    in [mV]
 
 [states]
 dot(C3) = be*C2 - ae*C3
@@ -41,56 +41,88 @@ dot(C2) = ae*C3 + bin*C1 - be*C2 - ain*C2
 dot(C1) = ain*C2 + bb*O - bin*C1 - aa*C1 - biStar*C1 + aiStar*I
     in [1]
 dot(O) = aa*C1 + ai*I - bi*O - bb*O
-        in [1]
+    in [1]
 dot(I) = bi*O + biStar*C1 - ai*I - aiStar*I
     in [1]
 
-aeAlpha = if(hERG1b == 1, 1.19e-2, 3.77e-3)
-beAlpha = if(hERG1b == 1, 1.82e-2, 2.44e-2)
-ainAlpha = if(hERG1b == 1, 9.29e-2, 3.59e-2)
-binAlpha = if(hERG1b == 1, 1.09e-1, 1.65e-2)
-aiAlpha = if(hERG1b == 1, 5.11e-2, 1.74e-2)
-biAlpha = if(hERG1b == 1, 1.79e-2, 9.26469e-3)
-aaAlpha = if(hERG1b == 1, 1.55e-1, 8.80e-2)
-bbAlpha = if(hERG1b == 1, 7.82e-2, 5.11e-3)
-biStarAlpha = if(hERG1b == 1, 9.32e-7, 1.02e-9)
-aeBeta = if(hERG1b == 1, 2.17e-2, 3.29e-2)
-beBeta = if(hERG1b == 1, -3.79e-2, -6.77e-2)
-aiBeta = if(hERG1b == 1, 2.09e-2, 2.87e-2)
-biBeta = if(hERG1b == 1, -2.15e-2, -2.347e-2)
-aaBeta = if(hERG1b == 1, 9.6e-3, 1.02e-2)
-bbBeta = if(hERG1b == 1, -3.54e-2, -4.44e-2)
-biStarBeta = if(hERG1b == 1, 1.621e-5, 7.99e-6)
+Tbase = 296 [K]
+    in [K]
 
-#aeAlpha = 6.9e-3
-#aeBeta = 0.0272
-#beAlpha = 2.27e-2
-#beBeta = -0.0431
-#ainAlpha = 2.66e-2
-#binAlpha = 1.348e-1
-#aiAlpha = 5.9e-3
-#aiBeta = -0.0443
-#biAlpha = 6.22e-2
-#biBeta = 0.0120
-#aaAlpha = 2.18e-2
-#aaBeta = 0.0262
-#bbAlpha = 9e-4
-#bbBeta = -0.0269
-#biStarAlpha = 1.29e-5
-#biStarBeta = 2.71e-6
+#Settings
+hERG1b = 1 #Possible values 0, 1
+cho = 0 #Possible values 0 (HEK), 1 (CHO)
+defaultRates = 0 #Possible values 1 (defaults rates - overrides options of hERG1b and cho), 0 (fitted rates, defined by cho and hERG1b)
+#Correction Factors
+aeAlphaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 0.546, cho==0 and hERG1b==1, 1.72, cho==1 and hERG1b==0, 0.800032, cho==1 and hERG1b==1, 1.07577, 1)*environment.T/Tbase
+aeBetaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 1.210, cho==0 and hERG1b==1, 0.8, cho==1 and hERG1b==0, 1.21655, cho==1 and hERG1b==1, 0.858628, 1)*Tbase/environment.T
+beAlphaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 1.075, cho==0 and hERG1b==1, 0.8, cho==1 and hERG1b==0, 1.08597, cho==1 and hERG1b==1, 0.800571, 1)*environment.T/Tbase
+beBetaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 1.571, cho==0 and hERG1b==1, 0.88, cho==1 and hERG1b==0, 1.08559, cho==1 and hERG1b==1, 0.800093, 1)*Tbase/environment.T
+ainAlphaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 1.350, cho==0 and hERG1b==1, 3.49, cho==1 and hERG1b==0, 1.146, cho==1 and hERG1b==1, 1.32593, 1)*environment.T/Tbase
+binAlphaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 0.122, cho==0 and hERG1b==1, 0.81, cho==1 and hERG1b==0, 0.834551, cho==1 and hERG1b==1, 0.855167, 1)*environment.T/Tbase
+aiAlphaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 2.949, cho==0 and hERG1b==1, 8.66, cho==1 and hERG1b==0, 0.832631, cho==1 and hERG1b==1, 2.21861, 1)*environment.T/Tbase
+aiBetaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, -0.648, cho==0 and hERG1b==1, -0.47, cho==1 and hERG1b==0, 0.872266, cho==1 and hERG1b==1, 0.986773, 1)*Tbase/environment.T
+biAlphaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 0.149, cho==0 and hERG1b==1, 0.29, cho==1 and hERG1b==0, 1.43517, cho==1 and hERG1b==1, 0.900581, 1)*environment.T/Tbase
+biBetaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, -1.956, cho==0 and hERG1b==1, -1.79, cho==1 and hERG1b==0, 0.809065, cho==1 and hERG1b==1, 0.900017, 1)*Tbase/environment.T
+aaAlphaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 4.037, cho==0 and hERG1b==1, 7.11, cho==1 and hERG1b==0, 1.16426, cho==1 and hERG1b==1, 5.11452, 1)*environment.T/Tbase
+aaBetaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 0.389, cho==0 and hERG1b==1, 0.37, cho==1 and hERG1b==0, 1.1962, cho==1 and hERG1b==1, 0.812985, 1)*Tbase/environment.T
+bbAlphaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 5.678, cho==0 and hERG1b==1, 86.89, cho==1 and hERG1b==0, 0.775023, cho==1 and hERG1b==1, 10.4073, 1)*environment.T/Tbase
+bbBetaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 1.651, cho==0 and hERG1b==1, 1.32, cho==1 and hERG1b==0, 0.871463, cho==1 and hERG1b==1, 0.992474, 1)*Tbase/environment.T
+biStarAlphaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 0.000079, cho==0 and hERG1b==1, 0.072, cho==1 and hERG1b==0, 100.558, cho==1 and hERG1b==1, 0.100008, 1)*environment.T/Tbase
+biStarBetaCorr = piecewise(defaultRates == 1, 1, cho==0 and hERG1b==0, 2.948, cho==0 and hERG1b==1, 5.98, cho==1 and hERG1b==0, 98.698, cho==1 and hERG1b==1, 8.44802, 1)*Tbase/environment.T
 
-ae = aeAlpha*exp(aeBeta*stimulus.IStim)
-be = beAlpha*exp(beBeta*stimulus.IStim)
+aeAlpha = 6.9e-3[ms^-1]*aeAlphaCorr
+    in [ms^-1]
+aeBeta = 0.0272[mV^-1]*aeBetaCorr
+    in [mV^-1]
+beAlpha = 2.27e-2[ms^-1]*beAlphaCorr
+    in [ms^-1]
+beBeta = -0.0431[mV^-1]*beBetaCorr
+    in [mV^-1]
+ainAlpha = 2.66e-2[ms^-1]*ainAlphaCorr
+    in [ms^-1]
+binAlpha = 1.348e-1[ms^-1]*binAlphaCorr
+    in [ms^-1]
+aiAlpha = 5.9e-3[ms^-1]*aiAlphaCorr
+    in [ms^-1]
+aiBeta = -0.0443[mV^-1]*aiBetaCorr
+    in [mV^-1]
+biAlpha = 6.22e-2[ms^-1]*biAlphaCorr
+    in [ms^-1]
+biBeta = 0.0120[mV^-1]*biBetaCorr
+    in [mV^-1]
+aaAlpha = 2.18e-2[ms^-1]*aaAlphaCorr
+    in [ms^-1]
+aaBeta = 0.0262[mV^-1]*aaBetaCorr
+    in [mV^-1]
+bbAlpha = 9e-4[ms^-1]*bbAlphaCorr
+    in [ms^-1]
+bbBeta = -0.0269[mV^-1]*bbBetaCorr
+    in [mV^-1]
+biStarAlpha = 1.29e-5[ms^-1]*biStarAlphaCorr
+    in [ms^-1]
+biStarBeta = 2.71e-6[mV^-1]*biStarBetaCorr
+    in [mV^-1]
+
+ae = aeAlpha*exp(aeBeta*stimulus.pace)
+    in [ms^-1]
+be = beAlpha*exp(beBeta*stimulus.pace)
+    in [ms^-1]
 ain = ainAlpha
+    in [ms^-1]
 bin = binAlpha
-ai = aiAlpha*exp(aiBeta*stimulus.IStim)
-bi = biAlpha*exp(biBeta*stimulus.IStim)
-aa = aaAlpha*exp(aaBeta*stimulus.IStim)
-bb = bbAlpha*exp(bbBeta*stimulus.IStim)
-biStar = biStarAlpha*exp(biStarBeta*stimulus.IStim)
+    in [ms^-1]
+ai = aiAlpha*exp(aiBeta*stimulus.pace)
+    in [ms^-1]
+bi = biAlpha*exp(biBeta*stimulus.pace)
+    in [ms^-1]
+aa = aaAlpha*exp(aaBeta*stimulus.pace)
+    in [ms^-1]
+bb = bbAlpha*exp(bbBeta*stimulus.pace)
+    in [ms^-1]
+biStar = biStarAlpha*exp(biStarBeta*stimulus.pace)
+    in [ms^-1]
 aiStar = biStar*ai*bb/(aa*bi)
-
-hERG1b = 0 #Possible values 0, 1
+    in [ms^-1]
 
 [[protocol]]
 # Level  Start    Length   Period   Multiplier

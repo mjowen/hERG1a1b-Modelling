@@ -13,57 +13,86 @@ states.cb1 = 0
 states.b = 0
 states.ib = 0
 
-
 [environment]
-use stimulus.IStim as V
+use stimulus.pace as V
 use states.o as o
 R = 8315 [J/kmol/K]
-T = 273 + 34 [K]
+    in [J/kmol/K]
+T = 273 [K] + 34 [K]
+    in [K]
 F = 96485 [C/mol]
+    in [C/mol]
 VFRT = V*F/(R*T)
-t = 0 bind time
+t = 0 [ms] bind time
     in [ms]
 Ko = 4 [mmol]
+    in [mmol]
 Ki = 140 [mmol]
-Ek = R*T/F*log(Ko/Ki) #Ek in mV due to kmol used in R
-IKr = gherg*sqrt(Ko/5.4)*o*(V-Ek)
-gherg = 0.0048 [mS]
-    in [mS]
+    in [mmol]
+Ek = R*T/F*log(Ko/Ki)
+    in [mV]
+IKr = gherg*o*(V-Ek)
+    in [A/F]
+gherg_0 = 0.0048 [mS/uF]
+    in [mS/uF]
+gherg = gherg_0*sqrt(Ko/5.4 [mmol])
+    in [mS/uF]
 e4031 = 55e-9 [mol]
+    in [mol]
 
 [stimulus]
-amplitude = 1 [uA/cm^2]
-IStim = pace * amplitude
-pace = 0 bind pace
+pace = 0 [mV] bind pace
+    in [mV]
 
 [states]
 use environment.e4031 as e4031
 use environment.VFRT as VFRT
 #Transition rates
 
-alpha = 0.03552*exp(1.812*VFRT)
-beta = 1.807e-3*exp(-1.913*VFRT)
-alpha1 = 4.340
-beta1 = 0.5409
-alpha2 = 0.02620*exp(1.241*VFRT)
-beta2 = 3.3e-3*exp(-0.9571*VFRT)
-alphai = 0.1139*exp(-0.4898*VFRT)*4.5/environment.Ko
-betai = 0.1254*exp(0.3781*VFRT)*(4.5/environment.Ko)^3
+alpha = 0.03552 [ms^-1]*exp(1.812 [1] * VFRT)
+    in [ms^-1]
+beta = 1.807e-3 [ms^-1]*exp(-1.913 [1] * VFRT)
+    in [ms^-1]
+alpha1 = 4.340 [ms^-1]
+    in [ms^-1]
+beta1 = 0.5409 [ms^-1]
+    in [ms^-1]
+alpha2 = 0.02620 [ms^-1]*exp(1.241 [1] * VFRT)
+    in [ms^-1]
+beta2 = 3.3e-3 [ms^-1]*exp(-0.9571 [1] * VFRT)
+    in [ms^-1]
+alphai = 0.1139 [ms^-1]*exp(-0.4898 [1] * VFRT)*(4.5 [mmol]/environment.Ko)
+    in [ms^-1]
+betai = 0.1254 [ms^-1]*exp(0.3781 [1] * VFRT)*(4.5 [mmol]/environment.Ko)^3
+    in [ms^-1]
 mu = alphai*beta2/betai
-on = e4031*2e3
-off = 5e-6
+    in [ms^-1]
+on = e4031*2e3 [mol^-1*ms^-1]
+    in [ms^-1]
+off = 5e-6 [ms^-1]
+    in [ms^-1]
 
 #Derivatives
 dot(c3) = c2*beta - c3*alpha
+    in [1]
 dot(c2) = c3*alpha + c1*beta1 - c2*(beta+alpha1)
+    in [1]
 dot(c1) = c2*alpha1 + o*beta2 + i*mu - c1*(beta1 + 2*alpha2)
+    in [1]
 dot(o) = c1*alpha2 + i*alphai + b*off - o*(beta2 + betai + on)
+    in [1]
 dot(i) = c1*alpha2 + o*betai - i*(mu + alphai)
+    in [1]
 dot(cb3) = cb2*beta - cb3*alpha
+    in [1]
 dot(cb2) = cb3*alpha + cb1*beta1 - cb2*(beta+alpha1)
+    in [1]
 dot(cb1) = cb2*alpha1 + b*beta2 + ib*mu - cb1*(beta1+2*alpha2)
+    in [1]
 dot(b) = cb1*alpha2 + ib*alphai + o*on - b*(beta2 + betai + off)
+    in [1]
 dot(ib) = cb1*alpha2 + b*betai - ib*(mu + alphai)
+    in [1]
 
 [[protocol]]
 # Level  Start    Length   Period   Multiplier
