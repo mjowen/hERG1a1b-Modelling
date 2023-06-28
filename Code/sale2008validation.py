@@ -33,4 +33,14 @@ plt.plot(times, np.divide(voltages,max(voltages)),label='Voltage')
 plt.plot(log2['environment.t'],np.divide(log2['environment.IKr'],max(log2['environment.IKr'])))
 plt.plot(log3['environment.t'],np.divide(log3['environment.IKr'],max(log2['environment.IKr'])))
 
+#%% State occupancy for Sale
+from Code import myokitPlot
+modelName = 'sale2008-1a1b'
+protocol = 'Perissinotti 2018\deactivation'
+factorVar = ['environment.e4031']
+factorVal = [0]
 
+myokitPlot.simplePlot(modelName = modelName, protocol=protocol, protocolName = '1', factorVars = factorVar, factorVals = factorVal, plotProtocol = True)
+states = ['states.c3', 'states.c2', 'states.c1', 'states.o', 'states.i', 'states.b']
+for i in range(len(states)):
+    myokitPlot.simplePlot(modelName = modelName, protocol=protocol, protocolName = '1', factorVars = factorVar, factorVals = factorVal, plotProtocol = False, ylabel = states[i], output = states[i])
