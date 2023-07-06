@@ -1,0 +1,171 @@
+[[model]]
+name: fink_2008_artefact_model
+# Initial values
+iKr_Markov.Cr1                = 0.9786
+iKr_Markov.Cr2                = 0.0031
+iKr_Markov.Cr3                = 0.0029
+iKr_Markov.Or4                = 0.014
+iKr_Markov.Ir5                = 0.0014
+membrane.V = -80 [mV]
+
+[reversal_potentials]
+E_K = environment.R * environment.T / environment.F * log(environment.K_o / environment.K_i)
+    in [mV]
+
+[environment]
+F =  9.6485e4 [C/mol]
+    in [C/mol]
+K_o = 4 [mmol]
+    in [mmol]
+K_i = 140 [mmol]
+    in [mmol]
+R = 8315 [mJ/mol/K]
+    in [mJ/mol/K]
+T = 310 [K]
+    in [K]
+time = 0 [ms] bind time
+    in [ms]
+IKr = IKr.i_Kr
+    in [pA]
+Imeasured = voltageclamp.Iin
+    in [pA]
+
+[IKr]
+g_Kr_0 = iKr_Markov.p17
+    in [pA/mV]
+g_max = g_Kr_0 * (environment.T / 35 [K] - 55 / 7) * sqrt(environment.K_o / 5.4 [mmol])
+    in [pA/mV]
+i_Kr = g_max * iKr_Markov.Or4 * (membrane.V - reversal_potentials.E_K)
+    in [pA]
+
+[membrane]
+use voltageclamp.Vp, voltageclamp.rseries, voltageclamp.voffset_eff
+Iion = environment.IKr + voltageclamp.ILeak # Should this be ILeak_eff instead
+    in [pA]
+cm = voltageclamp.cm_est
+    in [pF]
+dot(V) = (Vp - V + voffset_eff) / tau - Iion / cm
+    tau = cm * rseries in [ms]
+    desc: membane potential
+    in [mV]
+
+[voltageclamp]
+use membrane.V
+rseries = 5.0 * 1e-3 [GR]
+    in [GR]
+voffset_eff = 5 [mV]
+    in [mV]
+rseries_est = 0.8 * rseries
+    in [GR]
+cm_est = 15 [pF]
+    in [pF]
+Vc = -80 [mV] bind pace
+    desc: command voltage
+    in [mV]
+Vp = Vc + membrane.Iion * rseries_est
+    desc: pipette voltage
+    in [mV]
+Iin = membrane.Iion - ILeak_est
+    desc: measured current
+    in [pA]
+gLeak = 10 [pA/mV] #Parameter to be fitted (randomly assigned for data)
+    in [pA/mV]
+ELeak = -80 [mV] #Always holding potential as gLeak_est and ELeak_est are chosen to ensure effectively no current at holding potential
+    in [mV]
+ILeak_eff = gLeak * (V - ELeak)
+    in [pA]
+gLeak_est = 0 [pA/mV]
+    in [pA/mV]
+ELeak_est = -80 [mV]
+    in [mV]
+ILeak_est = gLeak_est * (V - ELeak_est)
+    in [pA]
+ILeak = ILeak_eff + ILeak_est
+   in [pA]
+
+[iKr_Markov]
+dot(Cr1) = beta_xr1 * Cr2 - alpha_xr1 * Cr1
+    in [1]
+dot(Cr2) = alpha_xr1 * Cr1 + beta_xr2 * Cr3 - (alpha_xr2 + beta_xr1) * Cr2
+    in [1]
+dot(Cr3) = alpha_xr2 * Cr2 + beta_xr3 * Or4 - (alpha_xr3 + beta_xr2) * Cr3
+    in [1]
+dot(Ir5) = alpha_xr4 * Or4 - beta_xr4 * Ir5
+    in [1]
+dot(Or4) = alpha_xr3 * Cr3 + beta_xr4 * Ir5 - (alpha_xr4 + beta_xr3) * Or4
+    in [1]
+alpha_xr1 = p1 * exp(p2 * membrane.V)
+    in [ms^-1]
+alpha_xr2 = p3 * exp(p4 * membrane.V)
+    in [ms^-1]
+alpha_xr3 = p5 * exp(p6 * membrane.V)
+    in [ms^-1]
+alpha_xr4 = p7 * exp(p8 * membrane.V) * (5.4 [mmol] / environment.K_o)^0.4
+    in [ms^-1]
+beta_xr1 = p9 * exp(p10 * membrane.V)
+    in [ms^-1]
+beta_xr2 = p11 * exp(p12 * membrane.V)
+    in [ms^-1]
+beta_xr3 = p13 * exp(p14 * membrane.V)
+    in [ms^-1]
+beta_xr4 = p15 * exp(p16 * membrane.V)
+    in [ms^-1]
+    
+p1 = 0.20618 [ms^-1]
+    in [ms^-1]
+p2 = 0.0112 [mV^-1]
+    in [mV^-1]
+p3 = 0.04209 [ms^-1]
+    in [ms^-1]
+p4 = 0 [mV^-1]
+    in [mV^-1]
+p5 = 0.02202 [ms^-1]
+    in [ms^-1]
+p6 = 0.0365 [mV^-1]
+    in [mV^-1]
+p7 = 0.41811 [ms^-1]
+    in [ms^-1]
+p8 = 0.0223 [mV^-1]
+    in [mV^-1]
+p9 = 0.13279 [ms^-1]
+    in [ms^-1]
+p10 = -0.0603 [mV^-1]
+    in [mV^-1]
+p11 = 0.08094 [ms^-1]
+    in [ms^-1]
+p12 = 0 [mV^-1]
+    in [mV^-1]
+p13 = 0.00023 [ms^-1]
+    in [ms^-1]
+p14 = -0.0399 [mV^-1]
+    in [mV^-1]
+p15 = 0.04150 [ms^-1]
+    in [ms^-1]
+p16 = -0.0312 [mV^-1]
+    in [mV^-1]
+p17 = 0.1524*1e3 [pA/mV]
+    in [pA/mV]
+
+[[protocol]]
+# Level  Start    Length   Period   Multiplier
+40      0    1000      1000.0   0
+
+[[script]]
+import matplotlib.pyplot as plt
+import myokit
+
+# Get model and protocol, create simulation
+m = get_model()
+p = get_protocol()
+s = myokit.Simulation(m, p)
+
+# Run simulation
+d = s.run(1000)
+
+# Display the results
+var = 'environment.time'
+plt.figure()
+plt.plot(d.time(), d[var])
+plt.title(var)
+plt.show()
+
