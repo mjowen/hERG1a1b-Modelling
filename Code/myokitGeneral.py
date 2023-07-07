@@ -15,7 +15,7 @@ def loadModels(modelNames):
     """
     models = []
     for i in range(len(modelNames)):
-        models.append(myokit.load_model('.\\Models\\'+modelNames[i]+'.mmt'))
+        models.append(myokit.load_model('./Models/'+modelNames[i]+'.mmt'))
     return models
 
 def loadModel(modelName):
@@ -29,7 +29,7 @@ def loadModel(modelName):
     -------
     model : myokit model object
     """
-    model = myokit.load_model('.\\Models\\'+modelName+'.mmt')
+    model = myokit.load_model('./Models/'+modelName+'.mmt')
     return model
 
 def compileModel(model, factorVars = [], factorVals = [], initialValues = []):
@@ -93,7 +93,7 @@ def addProtocol(sim, protocol, protocolName = 'voltage', plotProtocol = False):
     tmax : float
         The end time for the protocol
     """
-    log = myokit.DataLog.load_csv('.\\Protocols\\'+protocol+'.csv')
+    log = myokit.DataLog.load_csv('./Protocols/'+protocol+'.csv')
     times = log.time()
     voltages = log[protocolName]
     tmax = times[-1]

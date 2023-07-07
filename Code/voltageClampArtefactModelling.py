@@ -57,7 +57,7 @@ with open(filenameOut+'-trueParams.csv', 'w', newline = '') as csvfile:
 
 model = myokitGeneral.loadModel('fink2008-artefactModel')
 sim = myokitGeneral.compileModel(model, factorVars = ['voltageclamp.voffset_eff', 'voltageclamp.gLeak', 'iKr_Markov.p17'], factorVals = [voffset, gLeak, gKr])
-sim, tmax = myokitGeneral.addProtocol(sim, 'Additional Protocols\staircase-ramp')
+sim, tmax = myokitGeneral.addProtocol(sim, 'Additional Protocols/staircase-ramp')
 
 output = myokitGeneral.simulate(sim, tmax, output = ['environment.Imeasured', 'environment.IKr', 'membrane.V','voltageclamp.Vc','voltageclamp.ILeak_est'])
 
@@ -91,7 +91,7 @@ if plotting:
 
 model = myokitGeneral.loadModel('fink2008-artefactFreeModel')
 sim = myokitGeneral.compileModel(model)
-sim, tmax = myokitGeneral.addProtocol(sim, 'Additional Protocols\staircase-ramp')
+sim, tmax = myokitGeneral.addProtocol(sim, 'Additional Protocols/staircase-ramp')
 
 outputArtefactFree = myokitGeneral.simulate(sim, tmax, output = ['environment.Imeasured', 'membrane.V'])
 
@@ -103,7 +103,7 @@ with open(filenameOut+'-dataCurrents.csv', 'w', newline = '') as csvfile:
 #%% Fitting
 modelName = 'fink2008-artefactModel'
 paramNames = ['iKr_Markov.p1', 'iKr_Markov.p2', 'iKr_Markov.p3', 'iKr_Markov.p5', 'iKr_Markov.p6', 'iKr_Markov.p7', 'iKr_Markov.p8', 'iKr_Markov.p9', 'iKr_Markov.p10', 'iKr_Markov.p11', 'iKr_Markov.p13', 'iKr_Markov.p14', 'iKr_Markov.p15', 'iKr_Markov.p16', 'iKr_Markov.p17', 'voltageclamp.voffset_eff', 'voltageclamp.gLeak']
-protocol = 'Additional Protocols\staircase-ramp'
+protocol = 'Additional Protocols/staircase-ramp'
 outputName = 'environment.Imeasured'
 model = myokitFitting.Model(modelName, paramNames, protocol, outputName)
 
