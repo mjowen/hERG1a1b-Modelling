@@ -13,6 +13,7 @@ if os.getcwd()[-4:] == 'Code':
 plotting = False
 filenameOut = 'test-001'
 maxIter = 2500
+iterCount = 5
 
 def fit_leak_lr(staircase_protocol, current, V_win=[-115, -85], V_full=[-120, -80],
         ramp_start=0.3, ramp_end=0.7, dt=2e-4):
@@ -102,35 +103,53 @@ with open(filenameOut+'-dataCurrents.csv', 'w', newline = '') as csvfile:
     writer.writerows(tuple(zip(np.arange(tmax), leakSubtractedCurrent, outputArtefactFree[0])))
 
 #%% Fitting
+def fittingArtefactModels(modelName, values, filename):
+    paramNames = ['iKr_Markov.p1', 'iKr_Markov.p2', 'iKr_Markov.p3', 'iKr_Markov.p5', 'iKr_Markov.p6', 'iKr_Markov.p7', 'iKr_Markov.p8', 'iKr_Markov.p9', 'iKr_Markov.p10', 'iKr_Markov.p11', 'iKr_Markov.p13', 'iKr_Markov.p14', 'iKr_Markov.p15', 'iKr_Markov.p16', 'iKr_Markov.p17', 'voltageclamp.voffset_eff', 'voltageclamp.gLeak']
+    protocol = 'Additional Protocols/staircase-ramp'
+    outputName = 'environment.Imeasured'
+    model = myokitFitting.Model(modelName, paramNames, protocol, outputName)
+    
+    times = np.arange(0,tmax)
+    
+    parameters = [0.20618, 0.0112, 0.04209, 0.02202, 0.0365, 0.41811, 0.0223, 0.13279, -0.0603, 0.08094, 0.00023, -0.0399, 0.04150, -0.0312, 0.1524*1e3, 0, 5]
+    parameters = np.multiply(parameters,np.random.uniform(0.5,1.5,len(parameters)))
+    localBounds = [[0,1e-7,1e3], [1,1e-7,0.4], [2,1e-7,1e3], [3,1e-7,1e3], [4,1e-7,0.4], [5,1e-7,1e3], [6,1e-7,0.4], [7,1e-7,1e3], [8,-0.4,-1e-7], [9,1e-7,1e3], [10,1e-7,1e3], [11,-0.4,-1e-7], [12,1e-7,1e3], [13,-0.4,-1e-7]]
+    kCombinations = [[0,1], [3,4], [5,6], [7,8], [10,11], [12,13]]
+    logTransforms = [0, 2, 3, 5, 7, 9, 10, 12]
+    
+    xbest, fbest, xbests, fbests = myokitFitting.fitting(model, times, values, parameters, iterCount, localBounds, kCombinations, logTransforms, returnAll = True, plotting = plotting, maxIter = maxIter)
+    
+    with open(filename+'-fittedParams.csv', 'w', newline = '') as csvfile:
+        writer = csv.writer(csvfile, delimiter = ',')
+        writer.writerow(['paramNames','initialParams', 'bestParams-f-'+str(fbest)])
+        writer.writerows(tuple(zip(paramNames, parameters, xbest)))
+    
+    with open(filename+'-posteriors.csv', 'w', newline = '') as csvfile:
+        writer = csv.writer(csvfile, delimiter = ',')
+        writer.writerow(['paramNames'] + ['params-f-'+str(fbests[i]) for i in range(iterCount)])
+        a = [list(i) for i in zip(*xbests)]
+        writer.writerows([[paramNames[i]] + a[i] for i in range(len(paramNames))])
+
+print('First fitting: Artefact Data and Artefact Model')
 modelName = 'fink2008-artefactModel'
-paramNames = ['iKr_Markov.p1', 'iKr_Markov.p2', 'iKr_Markov.p3', 'iKr_Markov.p5', 'iKr_Markov.p6', 'iKr_Markov.p7', 'iKr_Markov.p8', 'iKr_Markov.p9', 'iKr_Markov.p10', 'iKr_Markov.p11', 'iKr_Markov.p13', 'iKr_Markov.p14', 'iKr_Markov.p15', 'iKr_Markov.p16', 'iKr_Markov.p17', 'voltageclamp.voffset_eff', 'voltageclamp.gLeak']
-protocol = 'Additional Protocols/staircase-ramp'
-outputName = 'environment.Imeasured'
-model = myokitFitting.Model(modelName, paramNames, protocol, outputName)
+values = outputArtefact[0]
+filenameOutFull = filenameOut+'-fit1'
+xbest, fbest, xbests, fbests = fittingArtefactModels(modelName, values, filenameOutFull)
+print('Finished first fitting')
+print(datetime.now())
 
-times = np.arange(0,tmax)
-values = output[0]
-parameters = [0.20618, 0.0112, 0.04209, 0.02202, 0.0365, 0.41811, 0.0223, 0.13279, -0.0603, 0.08094, 0.00023, -0.0399, 0.04150, -0.0312, 0.1524*1e3, 0, 5]
-parameters = np.multiply(parameters,np.random.uniform(0.5,1.5,len(parameters)))
-iterCount = 5
-localBounds = [[0,1e-7,1e3], [1,1e-7,0.4], [2,1e-7,1e3], [3,1e-7,1e3], [4,1e-7,0.4], [5,1e-7,1e3], [6,1e-7,0.4], [7,1e-7,1e3], [8,-0.4,-1e-7], [9,1e-7,1e3], [10,1e-7,1e3], [11,-0.4,-1e-7], [12,1e-7,1e3], [13,-0.4,-1e-7]]
-kCombinations = [[0,1], [3,4], [5,6], [7,8], [10,11], [12,13]]
-logTransforms = [0, 2, 3, 5, 7, 9, 10, 12]
+print('Second fitting: Artefact Data and Artefact Free Model')
+modelName = 'fink2008-artefactFreeModel'
+values = outputArtefact[0]
+filenameOutFull = filenameOut+'-fit2'
+xbest, fbest, xbests, fbests = fittingArtefactModels(modelName, values, filenameOutFull)
+print('Finished second fitting')
+print(datetime.now())
 
-xbest, fbest, xbests, fbests = myokitFitting.fitting(model, times, values, parameters, iterCount, localBounds, kCombinations, logTransforms, returnAll = True, plotting = plotting, maxIter = maxIter)
-
-with open(filenameOut+'-fittedParams.csv', 'w', newline = '') as csvfile:
-    writer = csv.writer(csvfile, delimiter = ',')
-    writer.writerow(['paramNames','initialParams', 'bestParams-f-'+str(fbest)])
-    writer.writerows(tuple(zip(paramNames, parameters, xbest)))
-
-with open(filenameOut+'-posteriors.csv', 'w', newline = '') as csvfile:
-    writer = csv.writer(csvfile, delimiter = ',')
-    writer.writerow(['paramNames'] + ['params-f-'+str(fbests[i]) for i in range(iterCount)])
-    a = [list(i) for i in zip(*xbests)]
-    writer.writerows([[paramNames[i]] + a[i] for i in range(len(paramNames))])
-
-print('Finished')
-print('fBest: '+str(fbest))
-print('maxIter: '+str(maxIter))
+print('Third fitting: Artefact Free Data and Artefact Free Model')
+modelName = 'fink2008-artefactFreeModel'
+values = outputArtefactFree[0]
+filenameOutFull = filenameOut+'-fit3'
+xbest, fbest, xbests, fbests = fittingArtefactModels(modelName, values, filenameOutFull)
+print('Finished third fitting')
 print(datetime.now())
