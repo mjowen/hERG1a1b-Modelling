@@ -12,6 +12,7 @@ if os.getcwd()[-4:] == 'Code':
 #Options
 plotting = False
 filenameOut = 'test-001'
+maxIter = 2500
 
 def fit_leak_lr(staircase_protocol, current, V_win=[-115, -85], V_full=[-120, -80],
         ramp_start=0.3, ramp_end=0.7, dt=2e-4):
@@ -116,7 +117,7 @@ localBounds = [[0,1e-7,1e3], [1,1e-7,0.4], [2,1e-7,1e3], [3,1e-7,1e3], [4,1e-7,0
 kCombinations = [[0,1], [3,4], [5,6], [7,8], [10,11], [12,13]]
 logTransforms = [0, 2, 3, 5, 7, 9, 10, 12]
 
-xbest, fbest, xbests, fbests = myokitFitting.fitting(model, times, values, parameters, iterCount, localBounds, kCombinations, logTransforms, returnAll = True, plotting = plotting, maxIter = 2500)
+xbest, fbest, xbests, fbests = myokitFitting.fitting(model, times, values, parameters, iterCount, localBounds, kCombinations, logTransforms, returnAll = True, plotting = plotting, maxIter = maxIter)
 
 with open(filenameOut+'-fittedParams.csv', 'w', newline = '') as csvfile:
     writer = csv.writer(csvfile, delimiter = ',')
@@ -128,3 +129,8 @@ with open(filenameOut+'-posteriors.csv', 'w', newline = '') as csvfile:
     writer.writerow(['paramNames'] + ['params-f-'+str(fbests[i]) for i in range(iterCount)])
     a = [list(i) for i in zip(*xbests)]
     writer.writerows([[paramNames[i]] + a[i] for i in range(len(paramNames))])
+
+print('Finished')
+print('fBest: '+str(fbest))
+print('maxIter: '+str(maxIter))
+print(datetime.now())

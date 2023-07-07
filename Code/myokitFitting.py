@@ -15,10 +15,10 @@ class Model(pints.ForwardModel):
         self.model = myokitGeneral.loadModel(modelName)
         self.sim = myokitGeneral.compileModel(self.model)
         self.sim, self.tmax = myokitGeneral.addProtocol(self.sim, protocol)
-        
         self.paramNames = paramNames
         self.outputName = outputName
         
+        self.sim.set_tolerance(1e-8, 1e-8)
         self.sim.pre(200)
         
     def n_parameters(self):
@@ -32,9 +32,11 @@ class Model(pints.ForwardModel):
         self.sim = myokitGeneral.editSim(self.sim, factorVars = self.paramNames, factorVals = parameters)
         
         # Run a simulation
-        output = myokitGeneral.simulate(self.sim, self.tmax, output = [self.outputName])
-        
-        return output[0]
+        try:
+            output = myokitGeneral.simulate(self.sim, self.tmax, output = [self.outputName])
+            return output[0]
+        except:
+            return np.inf*np.ones(np.size(times))
 
 class AdvancedBoundaries(pints.Boundaries):
     def __init__(self, paramCount, localBounds, kCombinations, vHigh = 40, vLow = -120):
