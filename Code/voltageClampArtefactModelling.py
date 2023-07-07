@@ -1,11 +1,13 @@
 import os
-if os.getcwd()[-4:] == 'Code':
-    os.chdir('..')
 import numpy as np
 import matplotlib.pyplot as plt
-from Code import myokitGeneral, myokitFitting
 from datetime import datetime
 import csv
+if os.getcwd()[-9:] == 'Modelling':
+    os.chdir('Code')
+import myokitGeneral, myokitFitting
+if os.getcwd()[-4:] == 'Code':
+    os.chdir('..')
 
 #Options
 plotting = False

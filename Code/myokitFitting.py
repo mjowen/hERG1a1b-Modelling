@@ -1,9 +1,14 @@
 #%%
 # Imports
+import os
 import matplotlib.pyplot as plt
-from Code import myokitGeneral
 import numpy as np
 import pints
+if os.getcwd()[-9:] == 'Modelling':
+    os.chdir('Code')
+import myokitGeneral
+if os.getcwd()[-4:] == 'Code':
+    os.chdir('..')
 
 class Model(pints.ForwardModel):
     def __init__(self, modelName, paramNames, protocol, outputName):

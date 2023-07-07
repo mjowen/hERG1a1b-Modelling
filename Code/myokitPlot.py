@@ -1,7 +1,13 @@
+import os
 import matplotlib.pyplot as plt
 import numpy as np
-from Code.myokitGeneral import *
 from scipy.optimize import curve_fit
+
+if os.getcwd()[-9:] == 'Modelling':
+    os.chdir('Code')
+from myokitGeneral import *
+if os.getcwd()[-4:] == 'Code':
+    os.chdir('..')
 
 def simplePlot(modelName, protocol, protocolName = 'voltage', factorVars = [], factorVals = [], plotProtocol=False, xlabel = 'Time (ms)', ylabel = 'Current (nA)', title = '', output = 'environment.IKr', initialValues = []):
     """
