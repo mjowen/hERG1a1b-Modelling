@@ -103,19 +103,12 @@ with open(filenameOut+'-dataCurrents.csv', 'w', newline = '') as csvfile:
     writer.writerows(tuple(zip(np.arange(tmax), leakSubtractedCurrent, outputArtefactFree[0])))
 
 #%% Fitting
-def fittingArtefactModels(modelName, values, filename):
-    paramNames = ['iKr_Markov.p1', 'iKr_Markov.p2', 'iKr_Markov.p3', 'iKr_Markov.p5', 'iKr_Markov.p6', 'iKr_Markov.p7', 'iKr_Markov.p8', 'iKr_Markov.p9', 'iKr_Markov.p10', 'iKr_Markov.p11', 'iKr_Markov.p13', 'iKr_Markov.p14', 'iKr_Markov.p15', 'iKr_Markov.p16', 'iKr_Markov.p17', 'voltageclamp.voffset_eff', 'voltageclamp.gLeak']
+def fittingArtefactModels(modelName, values, paramNames, parameters, localBounds, kCombinations, logTransforms, filename):
     protocol = 'Additional Protocols/staircase-ramp'
     outputName = 'environment.Imeasured'
     model = myokitFitting.Model(modelName, paramNames, protocol, outputName)
     
     times = np.arange(0,tmax)
-    
-    parameters = [0.20618, 0.0112, 0.04209, 0.02202, 0.0365, 0.41811, 0.0223, 0.13279, -0.0603, 0.08094, 0.00023, -0.0399, 0.04150, -0.0312, 0.1524*1e3, 0, 5]
-    parameters = np.multiply(parameters,np.random.uniform(0.5,1.5,len(parameters)))
-    localBounds = [[0,1e-7,1e3], [1,1e-7,0.4], [2,1e-7,1e3], [3,1e-7,1e3], [4,1e-7,0.4], [5,1e-7,1e3], [6,1e-7,0.4], [7,1e-7,1e3], [8,-0.4,-1e-7], [9,1e-7,1e3], [10,1e-7,1e3], [11,-0.4,-1e-7], [12,1e-7,1e3], [13,-0.4,-1e-7]]
-    kCombinations = [[0,1], [3,4], [5,6], [7,8], [10,11], [12,13]]
-    logTransforms = [0, 2, 3, 5, 7, 9, 10, 12]
     
     xbest, fbest, xbests, fbests = myokitFitting.fitting(model, times, values, parameters, iterCount, localBounds, kCombinations, logTransforms, returnAll = True, plotting = plotting, maxIter = maxIter)
     
@@ -129,12 +122,20 @@ def fittingArtefactModels(modelName, values, filename):
         writer.writerow(['paramNames'] + ['params-f-'+str(fbests[i]) for i in range(iterCount)])
         a = [list(i) for i in zip(*xbests)]
         writer.writerows([[paramNames[i]] + a[i] for i in range(len(paramNames))])
+    
+    return xbest, xbests, fbest, fbests
 
 print('First fitting: Artefact Data and Artefact Model')
 modelName = 'fink2008-artefactModel'
 values = outputArtefact[0]
 filenameOutFull = filenameOut+'-fit1'
-xbest, fbest, xbests, fbests = fittingArtefactModels(modelName, values, filenameOutFull)
+paramNames = ['iKr_Markov.p1', 'iKr_Markov.p2', 'iKr_Markov.p3', 'iKr_Markov.p5', 'iKr_Markov.p6', 'iKr_Markov.p7', 'iKr_Markov.p8', 'iKr_Markov.p9', 'iKr_Markov.p10', 'iKr_Markov.p11', 'iKr_Markov.p13', 'iKr_Markov.p14', 'iKr_Markov.p15', 'iKr_Markov.p16', 'iKr_Markov.p17', 'voltageclamp.voffset_eff', 'voltageclamp.gLeak']
+parameters = [0.20618, 0.0112, 0.04209, 0.02202, 0.0365, 0.41811, 0.0223, 0.13279, -0.0603, 0.08094, 0.00023, -0.0399, 0.04150, -0.0312, 0.1524*1e3, 0, 5]
+parameters = np.multiply(parameters,np.random.uniform(0.5,1.5,len(parameters)))
+localBounds = [[0,1e-7,1e3], [1,1e-7,0.4], [2,1e-7,1e3], [3,1e-7,1e3], [4,1e-7,0.4], [5,1e-7,1e3], [6,1e-7,0.4], [7,1e-7,1e3], [8,-0.4,-1e-7], [9,1e-7,1e3], [10,1e-7,1e3], [11,-0.4,-1e-7], [12,1e-7,1e3], [13,-0.4,-1e-7]]
+kCombinations = [[0,1], [3,4], [5,6], [7,8], [10,11], [12,13]]
+logTransforms = [0, 2, 3, 5, 7, 9, 10, 12]
+xbest, fbest, xbests, fbests = fittingArtefactModels(modelName, values, paramNames, parameters, localBounds, kCombinations, logTransforms, filenameOutFull)
 print('Finished first fitting')
 print(datetime.now())
 
@@ -142,7 +143,13 @@ print('Second fitting: Artefact Data and Artefact Free Model')
 modelName = 'fink2008-artefactFreeModel'
 values = outputArtefact[0]
 filenameOutFull = filenameOut+'-fit2'
-xbest, fbest, xbests, fbests = fittingArtefactModels(modelName, values, filenameOutFull)
+paramNames = ['iKr_Markov.p1', 'iKr_Markov.p2', 'iKr_Markov.p3', 'iKr_Markov.p5', 'iKr_Markov.p6', 'iKr_Markov.p7', 'iKr_Markov.p8', 'iKr_Markov.p9', 'iKr_Markov.p10', 'iKr_Markov.p11', 'iKr_Markov.p13', 'iKr_Markov.p14', 'iKr_Markov.p15', 'iKr_Markov.p16', 'iKr_Markov.p17']
+parameters = [0.20618, 0.0112, 0.04209, 0.02202, 0.0365, 0.41811, 0.0223, 0.13279, -0.0603, 0.08094, 0.00023, -0.0399, 0.04150, -0.0312, 0.1524*1e3]
+parameters = np.multiply(parameters,np.random.uniform(0.5,1.5,len(parameters)))
+localBounds = [[0,1e-7,1e3], [1,1e-7,0.4], [2,1e-7,1e3], [3,1e-7,1e3], [4,1e-7,0.4], [5,1e-7,1e3], [6,1e-7,0.4], [7,1e-7,1e3], [8,-0.4,-1e-7], [9,1e-7,1e3], [10,1e-7,1e3], [11,-0.4,-1e-7], [12,1e-7,1e3], [13,-0.4,-1e-7]]
+kCombinations = [[0,1], [3,4], [5,6], [7,8], [10,11], [12,13]]
+logTransforms = [0, 2, 3, 5, 7, 9, 10, 12]
+xbest, fbest, xbests, fbests = fittingArtefactModels(modelName, values, paramNames, parameters, localBounds, kCombinations, logTransforms, filenameOutFull)
 print('Finished second fitting')
 print(datetime.now())
 
@@ -150,6 +157,8 @@ print('Third fitting: Artefact Free Data and Artefact Free Model')
 modelName = 'fink2008-artefactFreeModel'
 values = outputArtefactFree[0]
 filenameOutFull = filenameOut+'-fit3'
-xbest, fbest, xbests, fbests = fittingArtefactModels(modelName, values, filenameOutFull)
+parameters = [0.20618, 0.0112, 0.04209, 0.02202, 0.0365, 0.41811, 0.0223, 0.13279, -0.0603, 0.08094, 0.00023, -0.0399, 0.04150, -0.0312, 0.1524*1e3]
+parameters = np.multiply(parameters,np.random.uniform(0.5,1.5,len(parameters)))
+xbest, fbest, xbests, fbests = fittingArtefactModels(modelName, values, paramNames, parameters, localBounds, kCombinations, logTransforms, filenameOutFull)
 print('Finished third fitting')
 print(datetime.now())
