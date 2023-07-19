@@ -148,7 +148,7 @@ def multiProtocolPlot(modelName, protocol, factorVars = [], factorVals = [], leg
     plt.title(title)
     plt.show()
 
-def multiSettingPlot(modelName, protocol, protocolName = 'voltage', factorVars = [[]], factorVals = [[]], legend = [], plotProtocol = False, xlabel = 'Time (ms)', ylabel = 'Current (nA)', title = ''):
+def multiSettingPlot(modelName, protocol, protocolName = 'voltage', factorVars = [[]], factorVals = [[]], legend = [], plotProtocol = False, xlabel = 'Time (ms)', ylabel = 'Current (nA)', title = '', output = 'environment.IKr'):
     """
     Plots the output of a model on a single figure for a protocol while varying model settings. 
     Parameters
@@ -181,11 +181,8 @@ def multiSettingPlot(modelName, protocol, protocolName = 'voltage', factorVars =
     for i in range(len(factorVars)):
         sim.reset()
         sim = editSim(sim, factorVars[i], factorVals[i])
-        if i==0:
-            sim, tmax = addProtocol(sim, protocol, protocolName, plotProtocol)
-        else:
-            sim, tmax = addProtocol(sim, protocol, protocolName)
-        current = simulate(sim, tmax)
+        sim, tmax = addProtocol(sim, protocol, protocolName)
+        current = simulate(sim, tmax, output = [output])
         plt.plot(np.arange(tmax),current[0])
     if len(legend)==0:
         legend = factorVals
@@ -196,6 +193,8 @@ def multiSettingPlot(modelName, protocol, protocolName = 'voltage', factorVars =
     plt.ylabel(ylabel)
     plt.title(title)
     plt.show()
+    if plotProtocol:
+        sim, tmax = addProtocol(sim, protocol, protocolName, plotProtocol)
 
 # Single exponential
 def single(t, a, b, c):
