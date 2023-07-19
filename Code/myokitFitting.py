@@ -77,7 +77,7 @@ class AdvancedBoundaries(pints.Boundaries):
         # All tests passed!
         return True
 
-def fitting(model, times, values, parameters, iterCount, localBounds, kCombinations, logTransforms, maxIter = 10000, returnAll = False, plotting = False):
+def fitting(model, times, values, parameters, iterCount, localBounds, kCombinations, logTransforms, maxIter = 10000, returnAll = False, plotting = False, parallel = False):
     problem = pints.SingleOutputProblem(model, times, values)
     error = pints.MeanSquaredError(problem)
     boundaries = AdvancedBoundaries(paramCount = model.n_parameters(), localBounds = localBounds, kCombinations = kCombinations)
@@ -111,6 +111,7 @@ def fitting(model, times, values, parameters, iterCount, localBounds, kCombinati
         # Create an optimisation controller
         opt = pints.OptimisationController(error, x0, boundaries=boundaries, transformation=transformation, method=pints.CMAES)
         opt.set_max_iterations(maxIter)
+        opt.set_parallel(parallel)
         # Run the optimisation
         xbest, fbest = opt.run()
         xbests[i,:] = xbest
